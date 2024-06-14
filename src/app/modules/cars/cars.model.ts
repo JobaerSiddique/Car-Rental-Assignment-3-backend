@@ -42,6 +42,8 @@ const CarsSchema = new Schema<TCars>({
         required:true,
         default:false,
     }
+},{
+    timestamps:true
 })
 
 

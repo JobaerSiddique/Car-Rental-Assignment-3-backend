@@ -9,6 +9,16 @@ const createBookingIntoDB =async (payload:TBooking) =>{
 
 
 
+const UserBookingInfoFromDB = async(id:string)=>{
+    
+    const findUserBooking = await Bookings.find({user:id})
+   return findUserBooking
+  
+}
+
+
+
 export const BookingService = {
-    createBookingIntoDB
+    createBookingIntoDB,
+    UserBookingInfoFromDB
 }

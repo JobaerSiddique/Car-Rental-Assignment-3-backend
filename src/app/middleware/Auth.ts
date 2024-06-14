@@ -27,6 +27,7 @@ const Auth = (...requiredRoles: TUserRole[])=>{
         if(  requiredRoles && !requiredRoles.includes(role) ){
             return res.status(httpStatus.UNAUTHORIZED).json({ success: false, message: 'You are not Authorized User' });
         }
+        console.log(decoded)
         req.user = decoded as JwtPayload
         next()
        

@@ -18,8 +18,20 @@ const createBooking = catchAsync(async(req,res)=>{
     })
 })
 
-
+const userBooking = catchAsync(async(req,res) =>{
+   const userId = req.user.userId
+  
+   const result = await BookingService.UserBookingInfoFromDB(userId)
+   sendResponse(res,{
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User Booking Info",
+    data: result
+   })
+   
+})
 
 export const BookingController ={
-    createBooking
+    createBooking,
+    userBooking
 }

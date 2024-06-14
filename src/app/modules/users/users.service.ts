@@ -24,9 +24,10 @@ const signInUser = async(payload:TUsers)=>{
         throw new AppError(httpStatus.NOT_FOUND,"Invalid email or password")
     }
     const jwtPayload={
-        userEmail : findUser?.email,
+        userId : findUser?._id,
         role: findUser?.role
     }
+    
     const token = jwt.sign(jwtPayload, config.jwt as string ,{
         expiresIn:"10d"
     }) 

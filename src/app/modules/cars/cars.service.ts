@@ -18,8 +18,19 @@ const getSingleCarFromDB = async(id:string)=>{
     return result;
 }
 
+
+const updateCarFromDB = async(id:string, payload:TCars)=>{
+    const result = await Cars.findByIdAndUpdate(id,payload)
+    return result
+}
+const deleteCarFromDB = async(id:string)=>{
+    const result = await Cars.findByIdAndUpdate(id,{isDeleted:true},{new:true})
+    return result
+}
 export const CarService = {
     createCarsIntoDB,
     getAllCarsFromDB,
-    getSingleCarFromDB
+    getSingleCarFromDB,
+    updateCarFromDB,
+    deleteCarFromDB,
 } 

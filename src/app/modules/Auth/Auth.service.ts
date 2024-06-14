@@ -20,6 +20,7 @@ const loginUser = async(payload: TLogin)=>{
     //     throw new AppError(httpStatus.NOT_FOUND,"Invalid email or password")
     // }
     const user = await User.findOne({email:payload?.email});
+    console.log(user)
     if(!user){
         throw new AppError(httpStatus.NOT_FOUND,"User not found")
 
@@ -29,7 +30,7 @@ const loginUser = async(payload: TLogin)=>{
   }
 
   const jwtPayload = {
-    userId:user.email,
+    userId:user._id,
     role:user.role
   }
 
