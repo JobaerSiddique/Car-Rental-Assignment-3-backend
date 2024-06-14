@@ -10,6 +10,7 @@ const router = express.Router();
 
 router.post('/',Auth(USER_ROLE.admin),CarController.createCars)
 router.get('/',CarController.getAllCars)
+router.get('/:id',CarController.getSingleCar)
 
 
 

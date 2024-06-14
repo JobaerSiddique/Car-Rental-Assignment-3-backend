@@ -13,7 +13,13 @@ const getAllCarsFromDB = async()=>{
     return result;
 }
 
+const getSingleCarFromDB = async(id:string)=>{
+    const result = await Cars.findById(id)
+    return result;
+}
+
 export const CarService = {
     createCarsIntoDB,
-    getAllCarsFromDB
+    getAllCarsFromDB,
+    getSingleCarFromDB
 } 

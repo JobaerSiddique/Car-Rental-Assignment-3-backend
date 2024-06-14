@@ -39,8 +39,20 @@ const getAllCars = catchAsync(async(req,res)=>{
 })
 
 
+const getSingleCar = catchAsync(async(req,res)=>{
+    const {id} = req.params;
+    const result = await CarService.getSingleCarFromDB(id);
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        success:true,
+        message:"A Car retrieved successfully",
+        data:result
+    })    
+})
+
 
 export const CarController= {
     createCars,
-    getAllCars
+    getAllCars,
+    getSingleCar
 }
