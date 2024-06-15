@@ -12,8 +12,8 @@ const router = express.Router();
 router.post('/',Auth(USER_ROLE.admin),CarController.createCars)
 router.get('/',CarController.getAllCars)
 router.get('/:id',CarController.getSingleCar)
+router.put('/return',Auth(USER_ROLE.admin),CarController.returnCar)
 router.put('/:id',Auth(USER_ROLE.admin),CarController.updateCar)
-router.put('/return',CarController.returnCar)
 router.delete('/:id',Auth(USER_ROLE.admin),CarController.deleteCar)
 
 

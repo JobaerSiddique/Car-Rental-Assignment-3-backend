@@ -63,7 +63,16 @@ const updateCar = catchAsync(async(req,res)=>{
 });
 
 const returnCar = catchAsync(async(req,res)=>{
-    const result = await CarService.returnCarfromDB(req.body)
+   const {bookingId,endTime} = req.body
+   console.log(req.body)
+   const result = await CarService.returnCarfromDB(bookingId,endTime);
+
+   sendResponse(res,{
+    statusCode:httpStatus.OK,
+    success:true,
+    message:"Car returned successfully",
+    data:result
+   })
 });
 
 const deleteCar = catchAsync(async(req,res)=>{
