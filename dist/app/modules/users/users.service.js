@@ -20,6 +20,10 @@ const AppError_1 = __importDefault(require("../Error/AppError"));
 const users_model_1 = require("./users.model");
 const config_1 = __importDefault(require("../../../config"));
 const createUserIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const emailExist = yield users_model_1.User.findOne({ email: payload.email });
+    if (emailExist) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Email already exist");
+    }
     const result = yield users_model_1.User.create(payload);
     return result;
 });
@@ -33,7 +37,7 @@ const signInUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Invalid email or password");
     }
     const jwtPayload = {
-        userEmail: findUser === null || findUser === void 0 ? void 0 : findUser.email,
+        userId: findUser === null || findUser === void 0 ? void 0 : findUser._id,
         role: findUser === null || findUser === void 0 ? void 0 : findUser.role
     };
     const token = jsonwebtoken_1.default.sign(jwtPayload, config_1.default.jwt, {

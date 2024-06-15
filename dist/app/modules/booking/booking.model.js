@@ -1,42 +1,45 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Bookings = void 0;
 const mongoose_1 = require("mongoose");
-const dateFormate_1 = require("../../utilis/dateFormate");
+const moment_1 = __importDefault(require("moment"));
 const BookingSchema = new mongoose_1.Schema({
     date: {
-        type: Date,
-        required: true,
-        default: Date.now()
-    },
-    startTime: {
         type: String,
         required: true,
-    },
-    endTime: {
-        type: String,
-        required: true,
-        default: "null"
+        validate: {
+            validator: function (v) {
+                return (0, moment_1.default)(v, 'YYYY-MM-DD', true).isValid();
+            },
+            message: (props) => `${props.value} is not a valid date!`
+        }
     },
     user: {
         type: mongoose_1.Schema.Types.ObjectId,
-        required: true,
-        ref: "User"
+        ref: 'User',
+        required: true
     },
     car: {
         type: mongoose_1.Schema.Types.ObjectId,
-        required: true,
-        ref: "Car"
+        ref: 'Car',
+        required: true
+    },
+    startTime: {
+        type: String,
+        required: true
+    },
+    endTime: {
+        type: String,
+        default: null
     },
     totalCost: {
         type: Number,
         default: 0
-    }
+    },
 }, {
-    timestamps: true
-});
-BookingSchema.pre('save', function (next) {
-    this.date = (0, dateFormate_1.extractDatePart)(new Date());
-    next();
+    timestamps: true,
 });
 exports.Bookings = (0, mongoose_1.model)('Booking', BookingSchema);

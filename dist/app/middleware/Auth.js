@@ -32,7 +32,7 @@ const Auth = (...requiredRoles) => {
             }
             const role = decoded.role;
             if (requiredRoles && !requiredRoles.includes(role)) {
-                return res.status(http_status_1.default.UNAUTHORIZED).json({ success: false, message: 'You are not Authorized User' });
+                return res.status(http_status_1.default.UNAUTHORIZED).json({ success: false, message: 'You have no access to this route ' });
             }
             req.user = decoded;
             next();

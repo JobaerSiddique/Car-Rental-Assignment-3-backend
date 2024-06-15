@@ -20,6 +20,7 @@ const cars_service_1 = require("./cars.service");
 const createCars = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.user.role === 'admin') {
         const addCars = req.body;
+        console.log("createCar", req.body);
         const result = yield cars_service_1.CarService.createCarsIntoDB(addCars);
         return (0, sendResponse_1.default)(res, {
             statusCode: http_status_1.default.OK,
@@ -45,7 +46,53 @@ const getAllCars = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: result
     });
 }));
+const getSingleCar = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield cars_service_1.CarService.getSingleCarFromDB(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "A Car retrieved successfully",
+        data: result
+    });
+}));
+const updateCar = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const updateCar = req.body;
+    const result = yield cars_service_1.CarService.updateCarFromDB(id, updateCar);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Car updated successfully",
+        data: result
+    });
+}));
+const returnCar = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { bookingId, endTime } = req.body;
+    console.log(req.body);
+    const result = yield cars_service_1.CarService.returnCarfromDB(bookingId, endTime);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Car returned successfully",
+        data: result
+    });
+}));
+const deleteCar = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield cars_service_1.CarService.deleteCarFromDB(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Car Deleted successfully",
+        data: result
+    });
+}));
 exports.CarController = {
     createCars,
-    getAllCars
+    getAllCars,
+    getSingleCar,
+    updateCar,
+    deleteCar,
+    returnCar
 };
