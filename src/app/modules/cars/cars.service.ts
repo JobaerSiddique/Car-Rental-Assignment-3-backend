@@ -62,7 +62,7 @@ const returnCarfromDB = async(bookingId:string,endTime:string)=>{
     }
     const durationInHours = (endDateTime - startDateTime) / (1000 * 60 * 60);
     console.log(durationInHours)
-    findBook.totalCost = parseFloat(durationInHours * findBook.car?.pricePerHour).toFixed(2);
+    findBook.totalCost = (parseFloat(durationInHours * findBook.car?.pricePerHour).toFixed(2));
     console.log(findBook.totalCost)
     const updatedBooking = await findBook.save();
       // Update car status to 'available'
