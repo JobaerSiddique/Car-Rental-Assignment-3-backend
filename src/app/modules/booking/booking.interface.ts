@@ -7,6 +7,6 @@ export type TBooking ={
     endTime: string;
     user: Types.ObjectId;
     car:Types.ObjectId;
-    totalCost: Number;
+    totalCost: number;
 
 }

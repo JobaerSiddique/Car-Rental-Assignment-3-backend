@@ -6,7 +6,7 @@ import validationZod from '../../middleware/validatieZod';
 import { carZodValidation } from './car.validation';
 
 
-console.log("userRole",USER_ROLE);
+
 
 const router = express.Router();
 

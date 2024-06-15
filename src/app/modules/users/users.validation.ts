@@ -3,7 +3,7 @@ import { z } from "zod";
  const userValidation = z.object({
     body:z.object({
         name:z.string({message:"name must be Required"}),
-    password:z.string({message:"password must be required"}).min(6),
+    password:z.string({message:"password must be required"}).min(6,{message:"password must be at least 6 characters"}),
     role:z.enum(['user', 'admin'],),
     phone:z.string({message:"phone must be required"}),
     address:z.string({message:"address must be required"})
