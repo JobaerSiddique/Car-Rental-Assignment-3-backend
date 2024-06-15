@@ -7,7 +7,7 @@ import { bookingValidations } from './booking.validation';
 
 const router = express.Router();
 
-router.post('/',Auth(USER_ROLE.user),validationZod(bookingValidations.bookingValidationSchema) ,BookingController.createBooking);
+router.post('/',Auth(USER_ROLE.user),validationZod(bookingValidations.bookingValidationSchema),BookingController.createBooking);
 router.get('/my-bookings',Auth(USER_ROLE.user), BookingController.userBooking)
 router.get('/', BookingController.getAllBooking)
 

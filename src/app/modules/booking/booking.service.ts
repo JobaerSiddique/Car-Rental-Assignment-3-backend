@@ -6,13 +6,14 @@ import { Cars } from "../cars/cars.model";
 import mongoose from "mongoose";
 
 
-const createBookingIntoDB =async (userId:string,payload:TBooking) =>{
+const createBookingIntoDB =async (userId:string,carId:string,date:string,startTime:string) =>{
    
-try {
-    const {car:carId,startTime,date} = payload;
+
+   
 
 
     const carFind = await Cars.findById(carId)
+    console.log(carFind)
     if(!carFind){
         throw new AppError(httpStatus.BAD_REQUEST,"There is  no car found")
     }
@@ -23,24 +24,35 @@ try {
    if(carFind.isDeleted){
     throw new AppError(httpStatus.NOT_FOUND,"Car is Not Found")
    }
-   
-   const newBooking = new Bookings({
-    user: userId,
-    car: carId,
-    date: date,
-    startTime: startTime,
-    endTime: null, // End time is null initially
-    totalCost: 0 // Total cost is 0 initially
-  });
 
-  carFind.status = "unavailable"
-  await carFind.save()
-
-  await newBooking.save()
-  return newBooking
-} catch (error) {
+   const session = await mongoose.startSession()
+   try {
+    session.startTransaction()
+    const newBooking = new Bookings({
+        user: userId,
+        car: carId,
+        date: date,
+        startTime: startTime,
+        endTime: null, // End time is null initially
+        totalCost: 0 // Total cost is 0 initially
+      });
+    
+      carFind.status = "unavailable"
+      await carFind.save()
+    
+      await newBooking.save()
+     
+      await session.commitTransaction()
+      await session.endSession()
+      return newBooking
+   } catch (error:any) {
+    
+    await session.abortTransaction()
+    await session.endSession()
+    throw new Error(error)
+   }
    
-}
+
 }
 
 

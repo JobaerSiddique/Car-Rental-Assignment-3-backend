@@ -14,8 +14,8 @@ const router = express.Router();
 router.post('/',Auth(USER_ROLE.admin),validationZod(carZodValidation.carValidator),CarController.createCars)
 router.get('/',CarController.getAllCars)
 router.get('/:id',CarController.getSingleCar)
-router.put('/return',Auth(USER_ROLE.admin),CarController.returnCar)
-router.put('/:id',Auth(USER_ROLE.admin),validationZod(carZodValidation.updateCarValidator),CarController.updateCar)
+router.put('/return',Auth(USER_ROLE.admin),validationZod(carZodValidation.returnCarSchema),CarController.returnCar)
+router.put('/:id',validationZod(carZodValidation.updateCarValidator),Auth(USER_ROLE.admin),CarController.updateCar)
 router.delete('/:id',Auth(USER_ROLE.admin),CarController.deleteCar)
 
 

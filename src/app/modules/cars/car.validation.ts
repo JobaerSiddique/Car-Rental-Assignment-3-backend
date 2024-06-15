@@ -8,9 +8,9 @@ import { z } from "zod";
     color:z.string(),
     isElectric:z.boolean(),
     features:z.array(z.string()),
-    status:z.enum(['available','unavailable']),
+    status:z.enum(['available','unavailable']).default('available'),
     pricePerHour:z.number(),
-    isDeleted:z.boolean(),
+    isDeleted:z.boolean().default(false),
     })
 })
  const updateCarValidator = z.object({
@@ -25,10 +25,23 @@ import { z } from "zod";
     isDeleted:z.boolean(),
     })
 })
+const returnCarSchema = z.object({
+    body: z.object({
+      bookingId: z.string().nonempty(),
+      endTime: z.string().refine((time) => {
+        const regx = /^([01]\d|2[0-3]):([0-5]\d)$/;
+        return regx.test(time);
+      }, {
+        message: 'Invalid time format, expected "HH:MM" in 24-hour format',
+      }),
+    }),
+    
+  })
 
 export const carZodValidation = {
     carValidator,
     updateCarValidator,
+    returnCarSchema
 } 
 
 

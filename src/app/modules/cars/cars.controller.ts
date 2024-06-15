@@ -9,6 +9,8 @@ import { CarService } from "./cars.service";
 const createCars = catchAsync(async(req,res)=>{
    if(req.user.role === 'admin'){
     const addCars = req.body
+    
+    console.log("createCar",req.body)
     const result = await CarService.createCarsIntoDB(addCars);
     return sendResponse(res,{
         statusCode:httpStatus.OK,

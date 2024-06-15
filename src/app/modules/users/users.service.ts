@@ -9,6 +9,10 @@ import config from '../../../config';
 
 
 const createUserIntoDB = async(payload:TUsers)=>{
+   const emailExist = await User.findOne({ email: payload.email})
+    if(emailExist){
+        throw new AppError(httpStatus.BAD_REQUEST,"Email already exist")
+    }
     const result = await User.create(payload);
     return result;  
 }

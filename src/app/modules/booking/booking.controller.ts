@@ -9,8 +9,8 @@ import mongoose from "mongoose";
 
 const createBooking = catchAsync(async(req,res)=>{
     const user = req.user.userId
-   
-    const result = await BookingService.createBookingIntoDB(user,req.body)
+   const {carId,date,startTime}= req.body;
+    const result = await BookingService.createBookingIntoDB(user,carId,date,startTime)
     const populateResult = await(await result?.populate("user"))?.populate("car")
 
 
@@ -29,7 +29,7 @@ const userBooking = catchAsync(async(req,res) =>{
    sendResponse(res,{
     statusCode: httpStatus.OK,
     success: true,
-    message: "User Booking Info",
+    message: "My Bookings retrieved successfully",
     data: result
    })
    
