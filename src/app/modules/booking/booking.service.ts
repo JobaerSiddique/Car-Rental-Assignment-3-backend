@@ -59,7 +59,7 @@ const createBookingIntoDB =async (userId:string,carId:string,date:string,startTi
 
 const UserBookingInfoFromDB = async(id:string)=>{
     
-    const findUserBooking = await Bookings.find({user:id})
+    const findUserBooking = await Bookings.find({user:id}).populate('user').populate('car')
    return findUserBooking
   
 }

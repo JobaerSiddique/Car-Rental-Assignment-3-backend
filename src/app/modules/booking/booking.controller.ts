@@ -2,7 +2,7 @@ import httpStatus from "http-status";
 import catchAsync from "../../utilis/catchAsync";
 import sendResponse from "../../utilis/sendResponse";
 import { BookingService } from "./booking.service";
-import mongoose from "mongoose";
+
 
 
 

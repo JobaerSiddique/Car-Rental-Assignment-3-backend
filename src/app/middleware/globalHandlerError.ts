@@ -9,6 +9,7 @@ import handleDuplicateError from '../modules/Error/handleDuplicate';
 import AppError from '../modules/Error/AppError';
 import config from '../../config';
 
+
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   //setting default values
   let statusCode = 500;
@@ -49,7 +50,8 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
         message: err?.message,
       },
     ];
-  } else if (err instanceof Error) {
+  } 
+  else if (err instanceof Error) {
     message = err.message;
     errorSources = [
       {

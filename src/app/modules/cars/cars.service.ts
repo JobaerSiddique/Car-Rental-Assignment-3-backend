@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 
 
 
+
 const createCarsIntoDB = async(payload:TCars)=>{
     const result = await Cars.create(payload)
     return result;
@@ -15,6 +16,9 @@ const createCarsIntoDB = async(payload:TCars)=>{
 
 const getAllCarsFromDB = async()=>{
     const result = await Cars.find()
+    if(!result.length ){
+        throw new AppError (httpStatus.NOT_FOUND,"No Data Found")
+    }
     return result;
 }
 
@@ -25,6 +29,11 @@ const getSingleCarFromDB = async(id:string)=>{
 
 
 const updateCarFromDB = async(id:string, payload:TCars)=>{
+    const findCar= await Cars.findById(id)
+    if(!findCar){
+        throw new AppError(httpStatus.BAD_REQUEST,"Car not Found ")
+    }
+    
     const result = await Cars.findByIdAndUpdate(id,payload)
     return result
 }
