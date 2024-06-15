@@ -48,10 +48,24 @@ const UserBookingInfoFromDB = async(id:string)=>{
   
 }
 
-
+const getAllBookingFromDB = async(carId:string,date:string)=>{
+    const query: any = {};
+    if(carId|| date){
+        query.car = carId;
+        query.date = date;
+    }
+    
+    
+    const result = await Bookings.find(query).populate('user').populate('car')
+    if(!result.length){
+        throw new AppError(httpStatus.NOT_FOUND,"No Booking Found")
+    }
+    return result;
+}
 
 export const BookingService = {
     createBookingIntoDB,
     UserBookingInfoFromDB,
+    getAllBookingFromDB
     
 }

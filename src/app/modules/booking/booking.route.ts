@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.post('/',Auth(USER_ROLE.user), BookingController.createBooking);
 router.get('/my-bookings',Auth(USER_ROLE.user), BookingController.userBooking)
+router.get('/', BookingController.getAllBooking)
 
 
 
