@@ -62,7 +62,7 @@ const returnCarfromDB = (bookingId, endTime) => __awaiter(void 0, void 0, void 0
         }
         const durationInHours = (endDateTime - startDateTime) / (1000 * 60 * 60);
         console.log(durationInHours);
-        findBook.totalCost = parseFloat(durationInHours * ((_a = findBook.car) === null || _a === void 0 ? void 0 : _a.pricePerHour)).toFixed(2);
+        findBook.totalCost = (parseFloat(durationInHours * ((_a = findBook.car) === null || _a === void 0 ? void 0 : _a.pricePerHour)).toFixed(2));
         console.log(findBook.totalCost);
         const updatedBooking = yield findBook.save();
         // Update car status to 'available'
