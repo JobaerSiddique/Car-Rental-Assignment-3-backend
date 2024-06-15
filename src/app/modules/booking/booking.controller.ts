@@ -11,8 +11,7 @@ const createBooking = catchAsync(async(req,res)=>{
     const user = req.user.userId
    
     const result = await BookingService.createBookingIntoDB(user,req.body)
-    const populateResult = await (await result.populate('user')).populate('car')
-    
+    const populateResult = await(await result?.populate("user"))?.populate("car")
 
 
     sendResponse(res,{

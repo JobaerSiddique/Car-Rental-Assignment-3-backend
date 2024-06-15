@@ -8,5 +8,6 @@ export default{
     db:process.env.DB,
     secret:process.env.SECRET,
     jwt:process.env.JWT,
-    salt_Rounds:process.env.SALT_ROUNDS
+    salt_Rounds:process.env.SALT_ROUNDS,
+    NODE_ENV: process.env.NODE_ENV
 }

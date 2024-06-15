@@ -7,7 +7,8 @@ import mongoose from "mongoose";
 
 
 const createBookingIntoDB =async (userId:string,payload:TBooking) =>{
-   console.log(payload,userId)
+   
+try {
     const {car:carId,startTime,date} = payload;
 
 
@@ -37,6 +38,9 @@ const createBookingIntoDB =async (userId:string,payload:TBooking) =>{
 
   await newBooking.save()
   return newBooking
+} catch (error) {
+   
+}
 }
 
 
