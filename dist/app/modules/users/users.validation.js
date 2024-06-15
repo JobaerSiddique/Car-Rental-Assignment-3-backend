@@ -5,7 +5,7 @@ const zod_1 = require("zod");
 const userValidation = zod_1.z.object({
     body: zod_1.z.object({
         name: zod_1.z.string({ message: "name must be Required" }),
-        password: zod_1.z.string({ message: "password must be required" }).min(6),
+        password: zod_1.z.string({ message: "password must be required" }).min(6, { message: "password must be at least 6 characters" }),
         role: zod_1.z.enum(['user', 'admin']),
         phone: zod_1.z.string({ message: "phone must be required" }),
         address: zod_1.z.string({ message: "address must be required" })

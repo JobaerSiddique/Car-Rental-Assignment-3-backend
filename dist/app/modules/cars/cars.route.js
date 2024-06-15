@@ -10,7 +10,6 @@ const cars_controller_1 = require("./cars.controller");
 const Auth_1 = __importDefault(require("../../middleware/Auth"));
 const validatieZod_1 = __importDefault(require("../../middleware/validatieZod"));
 const car_validation_1 = require("./car.validation");
-console.log("userRole", users_constant_1.USER_ROLE);
 const router = express_1.default.Router();
 router.post('/', (0, Auth_1.default)(users_constant_1.USER_ROLE.admin), (0, validatieZod_1.default)(car_validation_1.carZodValidation.carValidator), cars_controller_1.CarController.createCars);
 router.get('/', cars_controller_1.CarController.getAllCars);

@@ -19,13 +19,12 @@ function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield mongoose_1.default.connect(config_1.default.db);
-            console.log(config_1.default.db);
             app_1.default.listen(config_1.default.port, () => {
                 console.log(`Car Rentals sever is running ${config_1.default.port}`);
             });
         }
         catch (error) {
-            console.log(error);
+            throw new Error(error);
         }
     });
 }
