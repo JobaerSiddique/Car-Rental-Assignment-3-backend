@@ -12,4 +12,5 @@ router.get('/my-bookings',Auth(USER_ROLE.user), BookingController.userBooking)
 
 
 
+
 export const BookingRoutes = router;

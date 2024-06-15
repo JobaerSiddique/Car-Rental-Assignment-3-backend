@@ -62,6 +62,10 @@ const updateCar = catchAsync(async(req,res)=>{
     })
 });
 
+const returnCar = catchAsync(async(req,res)=>{
+    const result = await CarService.returnCarfromDB(req.body)
+});
+
 const deleteCar = catchAsync(async(req,res)=>{
 const {id} = req.params;
 const result = await CarService.deleteCarFromDB(id);
@@ -72,10 +76,14 @@ sendResponse(res,{
     data:result
 })   
 }) 
+
+
 export const CarController= {
     createCars,
     getAllCars,
     getSingleCar,
     updateCar,
-    deleteCar
+    deleteCar,
+    returnCar
+   
 }

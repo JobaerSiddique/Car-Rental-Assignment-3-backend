@@ -27,10 +27,15 @@ const deleteCarFromDB = async(id:string)=>{
     const result = await Cars.findByIdAndUpdate(id,{isDeleted:true},{new:true})
     return result
 }
+
+const returnCarfromDB = async(bookingId:string,endTime:string)=>{
+   
+}
 export const CarService = {
     createCarsIntoDB,
     getAllCarsFromDB,
     getSingleCarFromDB,
     updateCarFromDB,
     deleteCarFromDB,
+    returnCarfromDB
 } 
