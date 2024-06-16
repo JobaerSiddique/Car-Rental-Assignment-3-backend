@@ -14,7 +14,7 @@ const router = express_1.default.Router();
 router.post('/', (0, Auth_1.default)(users_constant_1.USER_ROLE.admin), (0, validatieZod_1.default)(car_validation_1.carZodValidation.carValidator), cars_controller_1.CarController.createCars);
 router.get('/', cars_controller_1.CarController.getAllCars);
 router.get('/:id', cars_controller_1.CarController.getSingleCar);
-router.put('/return', (0, Auth_1.default)(users_constant_1.USER_ROLE.admin), cars_controller_1.CarController.returnCar);
+router.put('/return', (0, Auth_1.default)(users_constant_1.USER_ROLE.admin), (0, validatieZod_1.default)(car_validation_1.carZodValidation.returnCarSchema), cars_controller_1.CarController.returnCar);
 router.put('/:id', (0, validatieZod_1.default)(car_validation_1.carZodValidation.updateCarValidator), (0, Auth_1.default)(users_constant_1.USER_ROLE.admin), cars_controller_1.CarController.updateCar);
 router.delete('/:id', (0, Auth_1.default)(users_constant_1.USER_ROLE.admin), cars_controller_1.CarController.deleteCar);
 exports.CarRoute = router;

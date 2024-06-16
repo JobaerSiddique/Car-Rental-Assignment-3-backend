@@ -28,7 +28,7 @@ const createBookingIntoDB = (userId, carId, date, startTime) => __awaiter(void 0
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Car is Not available");
     }
     if (carFind.isDeleted) {
-        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Car is Not Found");
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Car is no longer available");
     }
     const session = yield mongoose_1.default.startSession();
     try {

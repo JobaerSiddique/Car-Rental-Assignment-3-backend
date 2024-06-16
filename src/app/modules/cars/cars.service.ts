@@ -49,7 +49,9 @@ const returnCarfromDB = async(bookingId:string,endTime:string)=>{
  if(!findBook){
     throw new AppError(httpStatus.NOT_FOUND,"No Booking Found")
  }
-
+ if(findBook.totalCost > 0){
+  throw new AppError(httpStatus.NOT_FOUND,"The Car Already Returned")
+ }
   const session = await mongoose.startSession()
   try {
     session.startTransaction();
@@ -69,7 +71,7 @@ const returnCarfromDB = async(bookingId:string,endTime:string)=>{
       const car = await Cars.findById(findBook.car._id);
       if (car) {
           car.status = 'available';
-          await car.save();
+          console.log(await car.save())
       }
       if(findBook.car.status === 'available'){
         throw new AppError(httpStatus.BAD_REQUEST,"This car already returned")
@@ -84,6 +86,7 @@ const returnCarfromDB = async(bookingId:string,endTime:string)=>{
     throw new AppError(httpStatus.INTERNAL_SERVER_ERROR,error.message);
   }
 }
+
 export const CarService = {
     createCarsIntoDB,
     getAllCarsFromDB,

@@ -51,6 +51,9 @@ const returnCarfromDB = (bookingId, endTime) => __awaiter(void 0, void 0, void 0
     if (!findBook) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "No Booking Found");
     }
+    if (findBook.totalCost > 0) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "The Car Already Returned");
+    }
     const session = yield mongoose_1.default.startSession();
     try {
         session.startTransaction();
@@ -69,7 +72,7 @@ const returnCarfromDB = (bookingId, endTime) => __awaiter(void 0, void 0, void 0
         const car = yield cars_model_1.Cars.findById(findBook.car._id);
         if (car) {
             car.status = 'available';
-            yield car.save();
+            console.log(yield car.save());
         }
         if (findBook.car.status === 'available') {
             throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "This car already returned");

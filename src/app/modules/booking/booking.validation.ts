@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const bookingValidationSchema = z.object({
     body:z.object({
-        date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/,{message:"date format invalid, expected 'YYYY-MM-DD"}),
         user:z.string().optional(),
         carId:z.string(), // YYYY-MM-DD format
     startTime: z.string().refine((time)=>{

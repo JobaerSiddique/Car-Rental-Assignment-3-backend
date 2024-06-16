@@ -22,7 +22,7 @@ const createBookingIntoDB =async (userId:string,carId:string,date:string,startTi
         throw new AppError(httpStatus.BAD_REQUEST,"Car is Not available")
     }
    if(carFind.isDeleted){
-    throw new AppError(httpStatus.NOT_FOUND,"Car is Not Found")
+    throw new AppError(httpStatus.NOT_FOUND,"Car is no longer available")
    }
 
    const session = await mongoose.startSession()

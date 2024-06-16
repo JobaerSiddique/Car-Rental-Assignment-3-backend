@@ -4,7 +4,7 @@ exports.bookingValidations = void 0;
 const zod_1 = require("zod");
 const bookingValidationSchema = zod_1.z.object({
     body: zod_1.z.object({
-        date: zod_1.z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        date: zod_1.z.string().regex(/^\d{4}-\d{2}-\d{2}$/, { message: "date format invalid, expected 'YYYY-MM-DD" }),
         user: zod_1.z.string().optional(),
         carId: zod_1.z.string(), // YYYY-MM-DD format
         startTime: zod_1.z.string().refine((time) => {
