@@ -1,5 +1,5 @@
-# Car-Rental-Assignment-3-backend
-# Car Rental App
+
+# Car Rental Website backend
 
 ## Project Name
 Car Rental Management System
