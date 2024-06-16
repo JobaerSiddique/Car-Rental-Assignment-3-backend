@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post('/',Auth(USER_ROLE.user),validationZod(bookingValidations.bookingValidationSchema),BookingController.createBooking);
 router.get('/my-bookings',Auth(USER_ROLE.user), BookingController.userBooking)
-router.get('/', BookingController.getAllBooking)
+router.get('/',Auth(USER_ROLE.admin), BookingController.getAllBooking)
 
 
 
