@@ -5,6 +5,7 @@ import AppError from '../Error/AppError';
 import { TUsers } from './users.interface';
 import { User } from './users.model';
 import config from '../../../config';
+import { createToken, verifyToken } from './users.utils';
 
 
 
@@ -13,50 +14,85 @@ const createUserIntoDB = async(payload:TUsers)=>{
     if(emailExist){
         throw new AppError(httpStatus.BAD_REQUEST,"Email already exist")
     }
+    if(payload.password !== payload.confirmPassword){
+        throw new AppError(httpStatus.BAD_REQUEST,"Password does not match")
+    }
     const result = await User.create(payload);
     return result;  
 }
 
 const signInUser = async(payload:TUsers)=>{
-    const findUser = await User.findOne({email:payload.email});
-    
-    if(!findUser){
+    const user = await User.findOne({email:payload.email});
+    console.log(payload.email,payload.password);
+    if(!user ){
         throw new AppError(httpStatus.NOT_FOUND,"User not found")
     }
-    const matchPassword = await bcrypt.compare(payload.password,findUser.password,)
+    const matchPassword = await bcrypt.compare(payload.password,user .password,)
+    console.log({matchPassword});
     if(!matchPassword){
         throw new AppError(httpStatus.NOT_FOUND,"Invalid email or password")
     }
     const jwtPayload={
-        userId : findUser?._id,
-        role: findUser?.role
+        userId : user ?._id,
+        role: user ?.role
     }
     
-    const token = jwt.sign(jwtPayload, config.jwt as string ,{
-        expiresIn:"10d"
-    }) 
+    const accessToken = createToken(
+        jwtPayload,
+        config.jwt as string,
+        config.accessTokenExpires as string
+    );
 
-    const result = {
-        success: true,
-    statusCode: httpStatus.OK,
-    message: "User logged in successfully",
-    data: {
-      _id: findUser._id,
-      name: findUser.name,
-      email: findUser.email,
-      role: findUser.role,
-      phone: findUser.phone,
-      address: findUser.address,
-      
-    },
-    token
+    const refreshToken = createToken(
+        jwtPayload,
+        config.RefreshToken as string,
+        config.refreshTokenExpires as string
+    );
+
+    
+
+    
+    
+
+    return {user ,accessToken,refreshToken};
+
+}
+
+const getMeDB = async (userId:string,role:string)=>{
+
+let result = null
+
+if(role ){
+  result = await User.findById({_id:userId})
+}
+ return result
+
+}
+
+const AllUserDB = async()=>{
+    const result  = await User.find({})
+    return result;
+}
+
+const UpdateUserDB = async(id:string)=>{
+
+    const result = await User.findById(id);
+
+    if(!result){
+        throw new AppError(httpStatus.NOT_FOUND,"User not found")
     }
 
+    result.role = 'admin'
+    await result.save()
     return result;
-
 }
 
 export const UserService = {
     createUserIntoDB,
-    signInUser
+    signInUser,
+    getMeDB,
+    AllUserDB,
+    UpdateUserDB
+
+
 }

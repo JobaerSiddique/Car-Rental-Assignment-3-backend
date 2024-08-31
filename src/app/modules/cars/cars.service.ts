@@ -14,8 +14,24 @@ const createCarsIntoDB = async(payload:TCars)=>{
     return result;
 }
 
-const getAllCarsFromDB = async()=>{
-    const result = await Cars.find()
+const getAllCarsFromDB = async(filters)=>{
+    const { types, minPrice, maxPrice, isElectric } = filters;
+    const query = {};
+    if (types) {
+        query.types = types;  
+    }
+    if (minPrice && maxPrice) {
+        query.pricePerHour = { $gte: minPrice, $lte: maxPrice };
+    } else if (minPrice) {
+        query.pricePerHour = { $gte: minPrice };
+    } else if (maxPrice) {
+        query.pricePerHour = { $lte: maxPrice };
+    }
+    if (isElectric !== undefined) {
+        query.isElectric = isElectric === 'true';  
+    }
+
+    const result = await Cars.find(query)
     if(!result.length ){
         throw new AppError (httpStatus.NOT_FOUND,"No Data Found")
     }
@@ -63,10 +79,13 @@ const returnCarfromDB = async(bookingId:string,endTime:string)=>{
         throw new AppError(httpStatus.BAD_REQUEST,"End time should be greater than start time")
     }
     const durationInHours = (endDateTime - startDateTime) / (1000 * 60 * 60);
-    console.log(durationInHours)
+    
+    console.log(durationInHours);
+    findBook.duration = durationInHours.toFixed(2);
     findBook.totalCost = (parseFloat(durationInHours * findBook.car?.pricePerHour).toFixed(2));
-    console.log(findBook.totalCost)
+    
     const updatedBooking = await findBook.save();
+    console.log({updatedBooking});
       // Update car status to 'available'
       const car = await Cars.findById(findBook.car._id);
       if (car) {
@@ -86,6 +105,8 @@ const returnCarfromDB = async(bookingId:string,endTime:string)=>{
     throw new AppError(httpStatus.INTERNAL_SERVER_ERROR,error.message);
   }
 }
+
+
 
 export const CarService = {
     createCarsIntoDB,

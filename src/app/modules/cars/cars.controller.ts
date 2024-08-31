@@ -30,8 +30,9 @@ const createCars = catchAsync(async(req,res)=>{
 
 
 const getAllCars = catchAsync(async(req,res)=>{
-    console.log("test",req.user)
-    const result = await CarService.getAllCarsFromDB();
+    console.log(req.query)
+    const { types, minPrice, maxPrice, isElectric } = req.query;
+    const result = await CarService.getAllCarsFromDB({types, minPrice, maxPrice, isElectric});
     sendResponse(res,{
         statusCode:httpStatus.OK,
         success:true,
@@ -52,6 +53,8 @@ const getSingleCar = catchAsync(async(req,res)=>{
     })    
 })
 
+
+
 const updateCar = catchAsync(async(req,res)=>{
     const {id} = req.params;
     const updateCar = req.body;
@@ -66,7 +69,7 @@ const updateCar = catchAsync(async(req,res)=>{
 
 const returnCar = catchAsync(async(req,res)=>{
    const {bookingId,endTime} = req.body
-   console.log(req.body)
+   
    const result = await CarService.returnCarfromDB(bookingId,endTime);
 
    sendResponse(res,{
@@ -95,6 +98,7 @@ export const CarController= {
     getSingleCar,
     updateCar,
     deleteCar,
-    returnCar
+    returnCar,
+   
    
 }

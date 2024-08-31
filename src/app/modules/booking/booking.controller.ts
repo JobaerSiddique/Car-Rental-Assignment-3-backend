@@ -9,8 +9,9 @@ import { BookingService } from "./booking.service";
 
 const createBooking = catchAsync(async(req,res)=>{
     const user = req.user.userId
-   const {carId,date,startTime}= req.body;
-    const result = await BookingService.createBookingIntoDB(user,carId,date,startTime)
+   const {carId,startTime,nid,passport,drivingLicense,date}= req.body;
+   console.log(req.body);
+    const result = await BookingService.createBookingIntoDB(user,carId,startTime,nid,passport,drivingLicense,date)
     const populateResult = await(await result?.populate("user"))?.populate("car")
 
 
@@ -23,6 +24,7 @@ const createBooking = catchAsync(async(req,res)=>{
 })
 
 const userBooking = catchAsync(async(req,res) =>{
+    console.log(req.user)
    const userId = req.user.userId
   
    const result = await BookingService.UserBookingInfoFromDB(userId)
@@ -45,10 +47,61 @@ const getAllBooking= catchAsync(async(req,res)=>{
         data: result
     })
 })
+const approveCar = catchAsync(async(req,res)=>{
+    console.log(req.body);
+    const _id = req.body;
+    const result = await BookingService.approveCarFromDB(_id);
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        success:true,
+        message:"Car approved successfully",
+        data:result
+    })
+});
+const getSingleBooking = catchAsync(async(req,res)=>{
+    
+    const id = req.params.id;
+    console.log(id,req.user);
+    const result = await BookingService.getSingleBookingDB(id);
+    sendResponse(res,{
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Booking retrieved successfully",
+        data: result
+    })
+})
 
+
+const deleteBookings = catchAsync(async(req,res)=>{
+    const {id} = req.params
+   
+    const result = await BookingService.deleteBookingsDB(id)
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+    success:true,
+        message:"Bookings deleted successfully",
+        data: ''
+    })
+})
+
+const totalSummery = catchAsync(async(req,res)=>{
+    const result = await BookingService.getBookingSummaryDB();
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Booking summary retrieved successfully",
+      data: result,
+    });
+})
 export const BookingController ={
     createBooking,
     userBooking,
-    getAllBooking
+    getAllBooking,
+    approveCar,
+    deleteBookings,
+    getSingleBooking,
+    totalSummery
+    
+  
    
 }

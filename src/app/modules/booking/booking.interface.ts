@@ -8,5 +8,7 @@ export type TBooking ={
     user: Types.ObjectId;
     car:Types.ObjectId;
     totalCost: number;
+    approve:boolean;
+    paid:'unpaid'|'paid';
 
 }

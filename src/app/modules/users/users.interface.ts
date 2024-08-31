@@ -5,9 +5,11 @@ export interface TUsers {
     name:string,
     email:string,
     password:string,
+    confirmPassword:string,
     role:"user"|"admin",
     phone:string,
-    address:string,
+    image:string,
+    
    
 }
 

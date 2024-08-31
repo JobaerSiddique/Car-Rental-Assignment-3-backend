@@ -18,6 +18,7 @@ const userSchema = new Schema<TUsers, UserModel>({
         type:String,
         required:true
     },
+    
     role:{
         type:String,
        enum:['user', 'admin'],
@@ -27,24 +28,39 @@ const userSchema = new Schema<TUsers, UserModel>({
         type:String,
         required:true
     },
-    address:{
-        type:String,
-        required:true
-    },
+    image:{
+      type:String,
+      required:true
+    }
+   
 },{
     timestamps:true
 })
 
-userSchema.pre('save', async function (next){
-    const user= this;
-  user.password = await bcrypt.hash(user.password,Number(config.salt_Rounds) );
-    next()
-})
+// userSchema.pre('save', async function (next){
+//     const user= this;
+//   user.password = await bcrypt.hash(user.password,Number(config.salt_Rounds) );
+//   user.confirmPassword=await bcrypt.hash(user.confirmPassword,Number(config.salt_Rounds) );
+//     next()
+// })
+userSchema.pre('save', async function (next) {
+  const user = this;
 
+  // Only hash the password if it has been modified (or is new)
+  if (user.isModified('password')) {
+      user.password = await bcrypt.hash(user.password, Number(config.salt_Rounds));
+  }
+
+  // No need to hash confirmPassword or store it in the database
+  user.confirmPassword = undefined;
+
+  next();
+});
 
 userSchema.set('toJSON', {
     transform: (doc, ret) => {
       delete ret.password;
+      delete ret.confirmPassword;
       return ret;
     },
   });

@@ -29,7 +29,8 @@ const bookingValidationSchema = z.object({
         return true;
        
         
-    })
+    }),
+    approve: z.boolean().default(false)
 })
  const updateBookingValidations = z.object({
     body:z.object({

@@ -4,7 +4,7 @@
 ## Project Name
 Car Rental Management System
 ## Admin 
-email: admin@admin.com
+email: admin@admin.com,
 password: 123456
 ## Live URL
 Live Url Link : https://car-rental-assignment-3-backend.vercel.app/

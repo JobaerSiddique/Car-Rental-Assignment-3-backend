@@ -8,6 +8,11 @@ export default{
     db:process.env.DB,
     secret:process.env.SECRET,
     jwt:process.env.JWT,
+    RefreshToken:process.env.RefreshToken,
     salt_Rounds:process.env.SALT_ROUNDS,
-    NODE_ENV: process.env.NODE_ENV
+    NODE_ENV: process.env.NODE_ENV,
+    accessTokenExpires:process.env.access_Expires,
+    refreshTokenExpires:process.env.refresh_Expires,
+    store_Id:process.env.storeID,
+    store_pass:process.env.storePassword
 }

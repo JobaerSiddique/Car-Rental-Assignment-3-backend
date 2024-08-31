@@ -6,6 +6,8 @@ export type TCars = {
     color:string,
     isElectric:boolean,
     features:string[],
+    types:string,
+    image:string,
     status:'available'|'unavailable',
     pricePerHour:number,
     isDeleted:boolean,

@@ -21,10 +21,18 @@ const CarsSchema = new Schema<TCars>({
     },
     isElectric:{
         type:Boolean,
-        required:true,
+        required:false,
     },
     features:{
         type:[String],
+        required:true,
+    },
+    types:{
+        type:String,
+        required:true,
+    },
+    image:{
+        type:String,
         required:true,
     },
     status:{
