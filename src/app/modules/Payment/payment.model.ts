@@ -21,6 +21,11 @@ const PaymentSchema = new Schema({
         type: String,
         enum: ['Pending', 'Complete', 'Failed', 'Cancel'],
         default: 'Pending'
+    },
+    date: {
+        type: String,
+        required: true,
+        default: () => new Date().toLocaleDateString(), // Default to current date as a localized string
     }
 
 })

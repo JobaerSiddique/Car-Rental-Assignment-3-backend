@@ -14,6 +14,16 @@ const CarsSchema = new Schema<TCars>({
         required:true,
         trim:true,
     },
+   model: {
+        type:String,
+        required:true,
+        trim:true,
+    },
+   year: {
+        type:String,
+        required:true,
+        trim:true,
+    },
     color:{
         type:String,
         required:true,
@@ -49,6 +59,14 @@ const CarsSchema = new Schema<TCars>({
         type:Boolean,
         required:true,
         default:false,
+    },
+    gps:{
+        type:Boolean,
+        default: false,
+    },
+    childSeat:{
+        type:Boolean,
+        default: false,
     }
 },{
     timestamps:true

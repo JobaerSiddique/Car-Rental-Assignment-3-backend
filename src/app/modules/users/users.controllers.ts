@@ -59,13 +59,43 @@ const UpdateUser = catchAsync(async(req,res)=>{
     })
 })
 
-const AllUsers = catchAsync(async(req,res)=>{
-    const result = await UserService.AllUserDB()
+const AllUsers = catchAsync(async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit ) || 10;
+  
+    const {result,totalPages }= await UserService.AllUserDB(page,limit);
+  
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "All Users retrieved successfully",
+      data:  {result,totalPages},
+        
+        
+      
+    });
+  });
+const deleteUser = catchAsync(async(req,res)=>{
+    const {id} = req.params
+    const result = await UserService.deleteUserDB(id)
     sendResponse(res,{
         statusCode:httpStatus.OK,
         success:true,
-        message:"All Users retrieved successfully",
+        message:"Users Delete successfully",
         data:result
+    })
+})
+
+const userUpdateProfile = catchAsync(async(req,res)=>{
+    const {userId} = req.user;
+    const data = req.body;
+    console.log(data);
+    const result = await UserService.userUpdateProfileDB(userId,data)
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        success:true,
+        message:"User Profile updated successfully",
+        data:result,
     })
 })
 export const UserController ={
@@ -73,6 +103,9 @@ export const UserController ={
     SignIn,
     getMe,
     AllUsers,
-    UpdateUser
+    UpdateUser,
+    deleteUser,
+    userUpdateProfile
+
     
 }

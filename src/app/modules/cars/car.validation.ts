@@ -1,20 +1,24 @@
 import { z } from "zod";
 
 
- const carValidator = z.object({
-    body:z.object({
-        name:z.string(),
-    description:z.string(),
-    color:z.string(),
-    isElectric:z.boolean(),
-    features:z.array(z.string()),
-    types:z.string(),
-    image:z.string(),
-    status:z.enum(['available','unavailable']).default('available'),
-    pricePerHour:z.number(),
-    isDeleted:z.boolean().default(false),
-    })
-})
+const carValidator = z.object({
+  body: z.object({
+      name: z.string(),
+      description: z.string(),
+      color: z.string(),
+      isElectric: z.preprocess(val => val === 'true', z.boolean()),
+      features: z.array(z.string()),
+      types: z.string(),
+      image: z.string(),
+      status: z.enum(['available', 'unavailable']).default('available'),
+      pricePerHour: z.preprocess(val => parseFloat(val), z.number()),
+      isDeleted: z.boolean().default(false),
+      model: z.string(),
+      year: z.string(),
+      gps: z.preprocess(val => val === 'true', z.boolean()),
+      childSeat: z.preprocess(val => val === 'true', z.boolean())
+  })
+});
  const updateCarValidator = z.object({
     body:z.object({
         name:z.string().optional(),

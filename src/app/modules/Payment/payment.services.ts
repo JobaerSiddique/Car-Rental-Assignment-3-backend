@@ -30,7 +30,7 @@ const paymentSuccessDB = async(id:string)=>{
         if(!payment){
             throw new AppError(httpStatus.INTERNAL_SERVER_ERROR,"Payment not found")
         }
-
+        payment.date = new Date().toLocaleDateString(); 
         payment.status = 'Complete'
         await payment.save({session});
         const booking = await Bookings.findById(payment.bookingId).session(session).populate('car')      // Populate car details
@@ -38,7 +38,7 @@ const paymentSuccessDB = async(id:string)=>{
             if (!booking) {
                 throw new AppError(httpStatus.NOT_FOUND, 'Booking not found');
             }
-
+           
             booking.paid = 'paid';
             await booking.save({ session });
             

@@ -23,9 +23,12 @@ const createUserIntoDB = async(payload:TUsers)=>{
 
 const signInUser = async(payload:TUsers)=>{
     const user = await User.findOne({email:payload.email});
-    console.log(payload.email,payload.password);
+    
     if(!user ){
         throw new AppError(httpStatus.NOT_FOUND,"User not found")
+    }
+    if(user.isDelete){
+        throw new AppError(httpStatus.FORBIDDEN,"User have no access")
     }
     const matchPassword = await bcrypt.compare(payload.password,user .password,)
     console.log({matchPassword});
@@ -69,30 +72,71 @@ if(role ){
 
 }
 
-const AllUserDB = async()=>{
-    const result  = await User.find({})
-    return result;
-}
+const AllUserDB = async (page:number,limit:number) => {
+    console.log(page,limit);
+    const skip = (page - 1) * limit;
+    // console.log(skip);
+    const result = await User.find({}).skip(skip).limit(limit);
+    const totalUser = await User.countDocuments({});
+    // console.log(totalUser,limit);
+    const totalPages= Math.ceil(totalUser / limit)
+    console.log(result,totalPages);
+    return {result,totalPages};
+  };
 
 const UpdateUserDB = async(id:string)=>{
 
     const result = await User.findById(id);
-
+   
+    if(result.role === 'admin'){
+        throw new AppError(httpStatus.FORBIDDEN,"Admin can't update their role")
+    }
     if(!result){
         throw new AppError(httpStatus.NOT_FOUND,"User not found")
     }
-
+    
     result.role = 'admin'
     await result.save()
     return result;
 }
+const deleteUserDB = async(id:string)=>{
+    const user = await User.findById(id);
+    if(!user){
+        throw new AppError(httpStatus.NOT_FOUND,"User not found")
+    }
 
+    if(user.isDelete){
+        throw new AppError(httpStatus.FORBIDDEN,"User is Already deleted")
+    }
+    const result = await User.findByIdAndUpdate(id,{isDelete:true})
+    
+    return result
+}
+
+
+const userUpdateProfileDB = async(id:string,payload:any)=>{
+    const user = await User.findById(id)
+    console.log({payload});
+    if(!user){
+        throw new AppError(httpStatus.NOT_FOUND,"User not found")
+    }
+    if(user.isDelete){
+        throw new AppError(httpStatus.FORBIDDEN,"User is deleted")
+    }
+    const result = await User.findByIdAndUpdate(id,payload)
+    console.log(result);
+    return result
+
+
+}
 export const UserService = {
     createUserIntoDB,
     signInUser,
     getMeDB,
     AllUserDB,
-    UpdateUserDB
+    UpdateUserDB,
+    deleteUserDB,
+    userUpdateProfileDB
 
 
 }

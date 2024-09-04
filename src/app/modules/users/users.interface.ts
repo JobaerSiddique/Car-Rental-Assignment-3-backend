@@ -9,6 +9,7 @@ export interface TUsers {
     role:"user"|"admin",
     phone:string,
     image:string,
+    isDelete:boolean,
     
    
 }
