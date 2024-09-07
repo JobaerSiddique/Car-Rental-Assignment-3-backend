@@ -8,7 +8,8 @@ import { z } from "zod";
     
     phone:z.string({message:"phone must be required"}),
     image:z.string({message:"image must be required"}),
-    address:z.string({message:"address must be required"})
+    address:z.string({message:"address must be required"}),
+    status:z.enum(['active','block']).default('active')
     })
 })
  const updateUserValidation = z.object({

@@ -6,86 +6,99 @@ import moment from "moment";
 
 
 const BookingSchema = new Schema<TBooking>({
-    date: {
+  date: {
       type: String,
       required: true,
       validate: {
-        validator: function (v: string) {
-          return moment(v, 'YYYY-MM-DD', true).isValid();
-        },
-        message: (props: any) => `${props.value} is not a valid date!`
+          validator: function (v: string) {
+              return moment(v, 'YYYY-MM-DD', true).isValid();
+          },
+          message: (props: any) => `${props.value} is not a valid date!`
       }
-    },
-    user: { 
+  },
+  user: { 
       type: Schema.Types.ObjectId, 
       ref: 'User', 
       required: true 
-    },
-    car: { 
+  },
+  car: { 
       type: Schema.Types.ObjectId, 
       ref: 'Car', 
       required: true 
-    },
-    startTime: { 
+  },
+  startTime: { 
       type: String, 
-      required: true },
-    endTime: { 
+      required: true 
+  },
+  endTime: { 
       type: String, 
-      default: null },
-    totalCost: { 
+      default: null 
+  },
+  totalCost: { 
       type: Number, 
       default: 0 
-    },
-    approve:{
+  },
+  approve: {
       type: Boolean,
       default: false,
-    },
-    paid: {
+  },
+  paid: {
       type: String,
-      default: 'unpaid' // default value, if necessary
+      default: 'unpaid' 
   },
   nid: { 
-    type: String,
-    validate: {
-      validator: function(v: string) {
-        // Only check this field if passport is not provided
-        return this.passport ? true : !!v;
-      },
-      message: 'NID is required if Passport is not provided.'
-    }
+      type: String,
+      validate: {
+          validator: function(v: string) {
+              return this.passport ? true : !!v;
+          },
+          message: 'NID is required if Passport is not provided.'
+      }
   },
   passport: { 
-    type: String,
-    validate: {
-      validator: function(v: string) {
-        // Only check this field if NID is not provided
-        return this.nid ? true : !!v;
-      },
-      message: 'Passport is required if NID is not provided.'
-    }
+      type: String,
+      validate: {
+          validator: function(v: string) {
+              return this.nid ? true : !!v;
+          },
+          message: 'Passport is required if NID is not provided.'
+      }
   },
   drivingLicense: { 
-    type: String, 
-    required: true 
+      type: String, 
+      required: true 
   },
-  // Additional options
   gps: { 
-    type: Boolean, 
-    default: false 
+      type: Boolean, 
+      default: false 
   },
   childSeat: { 
-    type: Boolean, 
-    default: false 
+      type: Boolean, 
+      default: false 
   },
-  duration :{
-    type:Number,
-    default: 0
+  duration: {
+      type: Number,
+      default: 0
+  },
+  isDeleted: {
+      type: Boolean,
+      required: true,
+      default: false
+  },
+  endDate: {
+      type: String,
+      default: null,  // Make sure this is optional and not required during booking creation
+      validate: {
+          validator: function (v: string) {
+              return !v || moment(v, 'YYYY-MM-DD', true).isValid();  // If provided, validate the format
+          },
+          message: (props: any) => `${props.value} is not a valid date!`
+      }
   }
-  
-  
-  }, {
-    timestamps: true,
-  })
+}, {
+  timestamps: true,
+});
+
 
  
 

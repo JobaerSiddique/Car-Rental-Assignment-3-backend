@@ -38,19 +38,23 @@ const userBooking = catchAsync(async(req,res) =>{
 })
 
 const getAllBooking= catchAsync(async(req,res)=>{
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit ) || 10
     const { carId, date } = req.query;
-    const result =  await BookingService.getAllBookingFromDB(carId,date)
+   
+    const {result,totalPages} =  await BookingService.getAllBookingFromDB(carId,date,page,limit)
     sendResponse(res,{
         statusCode: httpStatus.OK,
         success: true,
         message: "Bookings retrieved successfully",
-        data: result
+        data: {result,totalPages}
     })
 })
 const approveCar = catchAsync(async(req,res)=>{
-    console.log(req.body);
-    const _id = req.body;
-    const result = await BookingService.approveCarFromDB(_id);
+    
+    const {id} = req.params;
+    console.log(id);
+    const result = await BookingService.approveCarFromDB(id);
     sendResponse(res,{
         statusCode:httpStatus.OK,
         success:true,
@@ -74,13 +78,13 @@ const getSingleBooking = catchAsync(async(req,res)=>{
 
 const deleteBookings = catchAsync(async(req,res)=>{
     const {id} = req.params
-   
+   console.log(id);
     const result = await BookingService.deleteBookingsDB(id)
     sendResponse(res,{
         statusCode:httpStatus.OK,
     success:true,
         message:"Bookings deleted successfully",
-        data: ''
+        data: result
     })
 })
 
@@ -93,6 +97,18 @@ const totalSummery = catchAsync(async(req,res)=>{
       data: result,
     });
 })
+
+const bookingUpdate = catchAsync(async(req,res)=>{
+    const {id} = req.params;
+    const data = req.body;
+    const result = await BookingService.updateBookingInfoDB(id,data)
+    sendResponse(res,{
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Booking updated successfully",
+        data: result,
+    })
+})
 export const BookingController ={
     createBooking,
     userBooking,
@@ -100,7 +116,8 @@ export const BookingController ={
     approveCar,
     deleteBookings,
     getSingleBooking,
-    totalSummery
+    totalSummery,
+    bookingUpdate
     
   
    

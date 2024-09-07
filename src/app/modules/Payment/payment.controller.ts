@@ -105,19 +105,16 @@ const createPayment = catchAsync(async(req,res)=>{
 const paymentSuccess = catchAsync(async(req,res)=>{
     const {trans_id} = req.params;
    const result = await PaymentService.paymentSuccessDB(trans_id);
-
+  
 res.redirect(`http://localhost:5173/dashboard/payment/success/${trans_id}`)
-   sendResponse(res,{
-    statusCode:httpStatus.OK,
-    success:true,
-    message:"Payment Successful",
-    data:result
-   })
+
 })
 
 
 const paymentCancel = catchAsync(async(req,res)=>{
-
+    const {trans_id} = req.params;
+    const result = await PaymentService.paymentCancelDB(trans_id);
+    res.redirect(`http://localhost:5173/dashboard/payment/cancel/${trans_id}`)
 })
 
 const paymentFailed = catchAsync(async(req,res)=>{
@@ -125,20 +122,25 @@ const paymentFailed = catchAsync(async(req,res)=>{
    const result = await PaymentService.paymentFailedDB(trans_id);
 
 res.redirect(`http://localhost:5173/dashboard/payment/failed/${trans_id}`)
-   sendResponse(res,{
-    statusCode:httpStatus.OK,
-    success:true,
-    message:"Payment Successful",
-    data:result
-   })
+  
 })
 
-
+const getPaymentInfo = catchAsync(async(req,res)=>{
+    const { trans_id } = req.params;
+    const result = await PaymentService.getPaymentInfoDB(trans_id)
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        success:true,
+        message:"Payment Info",
+        data:result,
+    })
+})
 
 export const PaymentController ={
     createPayment,
     paymentSuccess,
     paymentCancel,
     paymentFailed,
+    getPaymentInfo
    
 }

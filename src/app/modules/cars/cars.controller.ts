@@ -68,9 +68,9 @@ const updateCar = catchAsync(async(req,res)=>{
 });
 
 const returnCar = catchAsync(async(req,res)=>{
-   const {bookingId,endTime} = req.body
-   
-   const result = await CarService.returnCarfromDB(bookingId,endTime);
+   const {bookingId,endTime,endDate} = req.body
+   console.log(bookingId,endDate,endTime);
+   const result = await CarService.returnCarfromDB(bookingId,endDate,endTime);
 
    sendResponse(res,{
     statusCode:httpStatus.OK,

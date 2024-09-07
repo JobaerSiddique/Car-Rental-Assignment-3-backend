@@ -39,6 +39,11 @@ const userSchema = new Schema<TUsers, UserModel>({
     isDelete:{
       type:Boolean,
       default: false
+    },
+    status:{
+      type:String,
+      enum:['active', 'block'],
+      default:'active'
     }
    
 },{

@@ -5,6 +5,7 @@ import { Cars } from "./cars.model"
 import AppError from '../Error/AppError';
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
+import moment from 'moment';
 
 
 
@@ -35,6 +36,9 @@ const getAllCarsFromDB = async(filters)=>{
     if(!result.length ){
         throw new AppError (httpStatus.NOT_FOUND,"No Data Found")
     }
+    if(result.isDeleted){
+      throw new AppError (httpStatus.BAD_REQUEST, "Cars already deleted")
+    }
     return result;
 }
 
@@ -58,53 +62,96 @@ const deleteCarFromDB = async(id:string)=>{
     return result
 }
 
-const returnCarfromDB = async(bookingId:string,endTime:string)=>{
-  
-   const findBook= await Bookings.findById(bookingId).populate('user').populate('car');
-   
- if(!findBook){
-    throw new AppError(httpStatus.NOT_FOUND,"No Booking Found")
- }
- if(findBook.totalCost > 0){
-  throw new AppError(httpStatus.NOT_FOUND,"The Car Already Returned")
- }
-  const session = await mongoose.startSession()
-  try {
-    session.startTransaction();
-    findBook.endTime = endTime;
 
-    const startDateTime = new Date(`1970-01-01T${findBook.startTime}:00`).getTime();
-    const endDateTime = new Date(`1970-01-01T${endTime}:00`).getTime();
-    if(endDateTime<= startDateTime){
-        throw new AppError(httpStatus.BAD_REQUEST,"End time should be greater than start time")
+
+const returnCarfromDB = async (bookingId: string, endDate: string, endTime: string) => {
+    const findBook = await Bookings.findById(bookingId).populate('user').populate('car');
+     
+    if (!findBook) {
+      throw new AppError(httpStatus.NOT_FOUND, "No Booking Found");
     }
-    const durationInHours = (endDateTime - startDateTime) / (1000 * 60 * 60);
-    
-    console.log(durationInHours);
-    findBook.duration = durationInHours.toFixed(2);
-    findBook.totalCost = (parseFloat(durationInHours * findBook.car?.pricePerHour).toFixed(2));
-    
-    const updatedBooking = await findBook.save();
-    console.log({updatedBooking});
+    if (findBook.totalCost > 0) {
+      throw new AppError(httpStatus.BAD_REQUEST, "The Car Already Returned");
+    }
+    if(!findBook.approve){
+        throw new AppError(httpStatus.BAD_REQUEST, "Booking not approved");
+    }
+    const session = await mongoose.startSession();
+    try {
+      session.startTransaction();
+  
+      // Set the booking and return date and time
+      const bookingDate = findBook.date; // Assuming `date` field is the booking date in 'YYYY-MM-DD' format
+      const startTime = findBook.startTime; // Assuming `startTime` is stored in 'HH:mm' format
+  
+      // Log the date and time to check their values
+      console.log("Booking date:", bookingDate);
+      console.log("Start time:", startTime);
+      console.log("Return date:", endDate);
+      console.log("Return time:", endTime);
+  
+      // Validate date and time formats before creating Date objects
+      if (!moment(bookingDate, 'YYYY-MM-DD', true).isValid()) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Invalid booking date format");
+      }
+      if (!moment(endDate, 'YYYY-MM-DD', true).isValid()) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Invalid return date format");
+      }
+      if (!moment(startTime, 'HH:mm', true).isValid()) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Invalid start time format");
+      }
+      if (!moment(endTime, 'HH:mm', true).isValid()) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Invalid end time format");
+      }
+  
+      // Create Date objects for start and end time
+      const startDateTime = new Date(`${bookingDate}T${startTime}:00`);
+      const endDateTime = new Date(`${endDate}T${endTime}:00`);
+  
+      // Log the constructed Date objects to debug
+      console.log("Start DateTime:", startDateTime);
+      console.log("End DateTime:", endDateTime);
+  
+      if (isNaN(startDateTime.getTime()) || isNaN(endDateTime.getTime())) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Invalid date or time format");
+      }
+  
+      // Check if end time is greater than start time
+      if (endDateTime <= startDateTime) {
+        throw new AppError(httpStatus.BAD_REQUEST, "End time should be greater than start time");
+      }
+  
+      // Calculate the duration in hours
+      const durationInMilliseconds = endDateTime.getTime() - startDateTime.getTime();
+      const durationInHours = durationInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
+      console.log({durationInHours});
+      // Update booking details
+      findBook.endTime = endTime;
+      findBook.endDate=endDate;
+      findBook.duration = parseFloat(durationInHours.toFixed(2)); // Store duration in hours
+      findBook.totalCost = parseFloat((durationInHours * findBook.car?.pricePerHour).toFixed(2)); // Calculate total cost
+      console.log(findBook.totalCost);
+      const updatedBooking = await findBook.save();
+  
       // Update car status to 'available'
       const car = await Cars.findById(findBook.car._id);
       if (car) {
-          car.status = 'available';
-          console.log(await car.save())
+        car.status = 'available';
+        await car.save();
       }
-      if(findBook.car.status === 'available'){
-        throw new AppError(httpStatus.BAD_REQUEST,"This car already returned")
-     
-    }
-    await session.commitTransaction();
-    await session.endSession();
+  
+      await session.commitTransaction();
+      await session.endSession();
       return updatedBooking;
-  } catch (error:any) {
-    await session.abortTransaction();
-    await session.endSession();
-    throw new AppError(httpStatus.INTERNAL_SERVER_ERROR,error.message);
-  }
-}
+  
+    } catch (error: any) {
+      await session.abortTransaction();
+      await session.endSession();
+      throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
+    }
+  };
+  
+  
 
 
 

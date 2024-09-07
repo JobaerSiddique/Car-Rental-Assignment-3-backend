@@ -6,7 +6,7 @@ import { model, Schema } from "mongoose";
 const PaymentSchema = new Schema({
     bookingId: {
         type: Schema.Types.ObjectId,
-        ref: 'Bookings',
+        ref: 'Booking',
         required: true
     },
     transId:{
@@ -26,6 +26,11 @@ const PaymentSchema = new Schema({
         type: String,
         required: true,
         default: () => new Date().toLocaleDateString(), // Default to current date as a localized string
+    },
+    time: {
+        type: String,
+        required: true,
+        default: () => new Date().toLocaleTimeString(), // Default to current date as a localized string
     }
 
 })

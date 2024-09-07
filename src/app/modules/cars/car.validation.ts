@@ -41,6 +41,7 @@ const returnCarSchema = z.object({
       }, {
         message: 'Invalid time format, expected "HH:MM" in 24-hour format',
       }),
+      endDate:z.string()
     }),
     
   })

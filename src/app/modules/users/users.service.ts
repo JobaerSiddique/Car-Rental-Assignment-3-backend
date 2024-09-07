@@ -99,6 +99,22 @@ const UpdateUserDB = async(id:string)=>{
     await result.save()
     return result;
 }
+const UpdateUserStatusDB = async(id:string,payload:any)=>{
+console.log({id});
+    const result = await User.findById(id);
+   console.log({result});
+    if(result.role === 'admin'){
+        throw new AppError(httpStatus.FORBIDDEN,"Admin can't update their role")
+    }
+    if(!result){
+        throw new AppError(httpStatus.NOT_FOUND,"User not found")
+    }
+    
+    result.status = payload
+    await result.save()
+    // return result;
+    console.log(result);
+}
 const deleteUserDB = async(id:string)=>{
     const user = await User.findById(id);
     if(!user){
@@ -136,7 +152,8 @@ export const UserService = {
     AllUserDB,
     UpdateUserDB,
     deleteUserDB,
-    userUpdateProfileDB
+    userUpdateProfileDB,
+    UpdateUserStatusDB
 
 
 }

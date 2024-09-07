@@ -98,6 +98,13 @@ const userUpdateProfile = catchAsync(async(req,res)=>{
         data:result,
     })
 })
+
+const userStatusUpdate = catchAsync(async(req,res)=>{
+    const {id} = req.params;
+    console.log(req.params);
+    const data = req.body;
+    const result = await UserService.UpdateUserStatusDB(id,data)
+})
 export const UserController ={
     createUser,
     SignIn,
@@ -105,7 +112,8 @@ export const UserController ={
     AllUsers,
     UpdateUser,
     deleteUser,
-    userUpdateProfile
+    userUpdateProfile,
+    userStatusUpdate
 
     
 }

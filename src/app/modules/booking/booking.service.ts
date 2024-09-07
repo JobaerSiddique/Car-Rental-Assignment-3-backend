@@ -72,20 +72,22 @@ const UserBookingInfoFromDB = async(id:string)=>{
   
 }
 
-const getAllBookingFromDB = async(carId:string,date:string)=>{
+const getAllBookingFromDB = async(carId:string,date:string,page:number,limit:number)=>{
     const query: any = {};
     if(carId|| date){
         query.car = carId;
         query.date = date;
     }
-    console.log(query)
+    const skip = (page - 1) * limit;
     
-    const result = await Bookings.find(query).populate('user').populate('car')
+    const result = await Bookings.find(query).populate('user').populate('car').skip(skip).limit(limit);
     console.log(result)
     if(!result.length){
         throw new AppError(httpStatus.NOT_FOUND,"No Booking Found")
     }
-    return result;
+    const total = await Bookings.countDocuments(query);
+    const totalPages = Math.ceil(total / limit);
+    return {result,totalPages,};
 }
 const approveCarFromDB = async(bookingId:string)=>{
     const result = await Bookings.findByIdAndUpdate(bookingId, {
@@ -95,7 +97,22 @@ const approveCarFromDB = async(bookingId:string)=>{
 }
 
 const deleteBookingsDB = async(id:string)=>{
-   const result = await Bookings.findByIdAndDelete(id)
+  console.log({id});
+   const userBooking = await Bookings.findById(id)
+
+   if(userBooking.approve === true){
+    throw new AppError(httpStatus.BAD_REQUEST,"Booking can not delete already approved Bookings")
+   }
+   const car = await Cars.findById(userBooking?.car?._id)
+   if(!car){
+    throw new app.Error(httpStatus.BAD_REQUEST,"No car found");
+   }
+   if(userBooking?.isDeleted){
+    throw new AppError(httpStatus.BAD_REQUEST,"Booking can not delete already deleted Bookings")
+   }
+   car?.status = "available"
+   await car?.save()
+  const result = await Bookings.findByIdAndUpdate(id,{isDeleted:true})
    return result;
    
 }
@@ -136,6 +153,16 @@ const getBookingSummaryDB = async () => {
       totalRevenue: totalRevenue[0]?.totalRevenue || 0,
     };
   };
+
+  const updateBookingInfoDB = async(bookingId:string,payload:any)=>{
+    const bookings = await Bookings.findById(bookingId);
+    if(bookings.isDeleted || bookings?.approve){
+      throw new AppError(httpStatus.BAD_REQUEST,"Booking can not update already approved or deleted Bookings")
+    }
+    const result = await Bookings.findByIdAndUpdate(bookingId, payload)
+   
+    return result
+}
   
 export const BookingService = {
     createBookingIntoDB,
@@ -144,7 +171,8 @@ export const BookingService = {
     approveCarFromDB,
     deleteBookingsDB,
     getSingleBookingDB,
-    getBookingSummaryDB
+    getBookingSummaryDB,
+    updateBookingInfoDB
   
     
 }

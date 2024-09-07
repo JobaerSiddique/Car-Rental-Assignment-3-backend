@@ -10,11 +10,11 @@ const router = express.Router();
 router.get('/summery',Auth(USER_ROLE.admin),BookingController.totalSummery)
 router.post('/',Auth(USER_ROLE.user),validationZod(bookingValidations.bookingValidationSchema),BookingController.createBooking);
 router.get('/my-bookings',Auth(USER_ROLE.user), BookingController.userBooking)
-router.get('/admin/all-bookings',Auth(USER_ROLE.admin), BookingController.getAllBooking)
-router.put('/approve', BookingController.approveCar)
+router.get('/all-bookings',Auth(USER_ROLE.admin), BookingController.getAllBooking)
+router.put('/approve/:id',Auth(USER_ROLE.admin), BookingController.approveCar)
 router.get('/:id',Auth(USER_ROLE.user), BookingController.getSingleBooking)
-
-router.delete('/:id', BookingController.deleteBookings)
+router.delete('/:id',Auth(USER_ROLE.user,USER_ROLE.admin), BookingController.deleteBookings)
+router.put('/updateBooking/:id', BookingController.bookingUpdate)
 
 
 
