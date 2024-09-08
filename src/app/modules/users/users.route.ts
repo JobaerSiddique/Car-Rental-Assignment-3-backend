@@ -17,7 +17,9 @@ router.put('/updateUser/:id',Auth(USER_ROLE.admin),UserController.UpdateUser)
 router.get('/me',Auth(USER_ROLE.user,USER_ROLE.admin),UserController.getMe)
 router.put('/update-profile',Auth(USER_ROLE.user,USER_ROLE.admin),validationZod(userzodValidation.updateUserValidation),UserController.userUpdateProfile)
 router.delete('/deleteUser/:id',Auth(USER_ROLE.admin),UserController.deleteUser)
-router.put('/userStatus/:id',UserController.userStatusUpdate)
+router.put('/userStatus/:id',Auth(USER_ROLE.admin),UserController.userStatusUpdate)
+router.post('/forget-password',validationZod(userzodValidation.userForgetValidation),UserController.forgetPassword)
+
 
 
 

@@ -6,6 +6,7 @@ import { TUsers } from './users.interface';
 import { User } from './users.model';
 import config from '../../../config';
 import { createToken, verifyToken } from './users.utils';
+import { sendEmail } from '../../utilis/sendEmail';
 
 
 
@@ -29,6 +30,9 @@ const signInUser = async(payload:TUsers)=>{
     }
     if(user.isDelete){
         throw new AppError(httpStatus.FORBIDDEN,"User have no access")
+    }
+    if(user.status === "block"){
+        throw new AppError(httpStatus.FORBIDDEN,"User already blocked")
     }
     const matchPassword = await bcrypt.compare(payload.password,user .password,)
     console.log({matchPassword});
@@ -99,7 +103,7 @@ const UpdateUserDB = async(id:string)=>{
     await result.save()
     return result;
 }
-const UpdateUserStatusDB = async(id:string,payload:any)=>{
+const UpdateUserStatusDB = async(id:string)=>{
 console.log({id});
     const result = await User.findById(id);
    console.log({result});
@@ -110,7 +114,7 @@ console.log({id});
         throw new AppError(httpStatus.NOT_FOUND,"User not found")
     }
     
-    result.status = payload
+    result.status = "block"
     await result.save()
     // return result;
     console.log(result);
@@ -145,6 +149,39 @@ const userUpdateProfileDB = async(id:string,payload:any)=>{
 
 
 }
+
+const forgetPasswordDB = async(email:string)=>{
+    const user = await User.findOne({ email: email});
+    console.log(user);
+
+    if(!user){
+        throw new AppError(httpStatus.NOT_FOUND,"User not found");
+    }
+
+    if(user.isDelete){
+        throw new AppError(httpStatus.FORBIDDEN,"User is deleted");
+    }
+
+    if(user.status === "block"){
+        throw new AppError(httpStatus.FORBIDDEN,"User is blocked");
+    }
+
+    const jwtPayload={
+        userId : user?._id,
+        role: user ?.role
+    }
+    
+    const accessToken = createToken(
+        jwtPayload,
+        config.jwt as string,
+        "5m"
+    );
+
+    const resetLink = `${config.reset_link}?email=${user.email}&token=${accessToken}`;
+    console.log(resetLink);
+    sendEmail(user.email,resetLink)
+}
+
 export const UserService = {
     createUserIntoDB,
     signInUser,
@@ -153,7 +190,9 @@ export const UserService = {
     UpdateUserDB,
     deleteUserDB,
     userUpdateProfileDB,
-    UpdateUserStatusDB
+    UpdateUserStatusDB,
+    forgetPasswordDB
+ 
 
 
 }

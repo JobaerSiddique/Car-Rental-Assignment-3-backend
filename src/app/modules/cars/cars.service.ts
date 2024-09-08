@@ -58,7 +58,10 @@ const updateCarFromDB = async(id:string, payload:TCars)=>{
     return result
 }
 const deleteCarFromDB = async(id:string)=>{
+
     const result = await Cars.findByIdAndUpdate(id,{isDeleted:true},{new:true})
+    result?.status="unavailable"
+    await result.save()
     return result
 }
 

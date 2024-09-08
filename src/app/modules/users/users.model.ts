@@ -44,7 +44,10 @@ const userSchema = new Schema<TUsers, UserModel>({
       type:String,
       enum:['active', 'block'],
       default:'active'
-    }
+    },
+    passwordChangedAt: {
+      type: Date,
+    },
    
 },{
     timestamps:true

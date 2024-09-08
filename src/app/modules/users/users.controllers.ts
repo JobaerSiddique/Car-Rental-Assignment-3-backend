@@ -101,10 +101,25 @@ const userUpdateProfile = catchAsync(async(req,res)=>{
 
 const userStatusUpdate = catchAsync(async(req,res)=>{
     const {id} = req.params;
-    console.log(req.params);
-    const data = req.body;
-    const result = await UserService.UpdateUserStatusDB(id,data)
+    
+    
+    const result = await UserService.UpdateUserStatusDB(id)
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        success:true,
+        message:"User status updated successfully",
+        data:result,
+    })
 })
+
+const forgetPassword = catchAsync(async(req,res)=>{
+    const {email} = req.body;
+    console.log({email});
+    const result = await UserService.forgetPasswordDB(email)
+
+})
+
+
 export const UserController ={
     createUser,
     SignIn,
@@ -113,7 +128,8 @@ export const UserController ={
     UpdateUser,
     deleteUser,
     userUpdateProfile,
-    userStatusUpdate
-
+    userStatusUpdate,
+    forgetPassword
+   
     
 }

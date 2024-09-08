@@ -14,5 +14,8 @@ export default{
     accessTokenExpires:process.env.access_Expires,
     refreshTokenExpires:process.env.refresh_Expires,
     store_Id:process.env.storeID,
-    store_pass:process.env.storePassword
+    store_pass:process.env.storePassword,
+    reset_link: process.env.resetLink,
+    g_user : process.env.gUser,
+    g_pass : process.env.gPass
 }

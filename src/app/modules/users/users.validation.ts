@@ -22,11 +22,20 @@ import { z } from "zod";
     
     })
 })
+const userForgetValidation = z.object({
+    body:z.object({
+        email:z.string({message:"email must be Required"}),
+    })
+})
+
 
 export const userzodValidation = {
     userValidation,
     updateUserValidation,
+    userForgetValidation
 }
+
+
 // name:string,
 //     email:string,
 //     password:string,
