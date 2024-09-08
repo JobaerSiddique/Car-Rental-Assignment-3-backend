@@ -48,6 +48,9 @@ const userSchema = new Schema<TUsers, UserModel>({
     passwordChangedAt: {
       type: Date,
     },
+    passwordChangeCount: 
+    { type: Number, 
+      default: 0 }
    
 },{
     timestamps:true

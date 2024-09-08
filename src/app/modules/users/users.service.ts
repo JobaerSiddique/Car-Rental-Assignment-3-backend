@@ -174,7 +174,7 @@ const forgetPasswordDB = async(email:string)=>{
     const accessToken = createToken(
         jwtPayload,
         config.jwt as string,
-        "5m"
+        "15m"
     );
 
     const resetLink = `${config.reset_link}?email=${user.email}&token=${accessToken}`;
@@ -183,9 +183,46 @@ const forgetPasswordDB = async(email:string)=>{
 }
 
 const resetPasswordDB = async(token:string,payload:{email:string,password:string})=>{
-
+    console.log({token});
     const user = await User.findOne({email:payload.email})
-    console.log(user);
+    if(!user){
+        throw new AppError(httpStatus.NOT_FOUND,"User not found");
+    }
+
+    if(user.isDelete){
+        throw new AppError(httpStatus.FORBIDDEN,"User is deleted");
+    }
+
+    if(user.status === "block"){
+        throw new AppError(httpStatus.FORBIDDEN,"User is blocked");
+    }
+
+    if (user.passwordChangeCount >= 3) {
+        throw new AppError(httpStatus.FORBIDDEN, 'Password change limit reached');
+      }
+
+    const decoded = jwt.verify(
+        token,
+        config.jwt as string,
+      ) as JwtPayload;
+    
+      if (!user._id.equals(decoded.userId)) {
+        
+        throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden!');
+      }
+      
+      const hashedPassword = await bcrypt.hash(payload.password, Number(config.salt_Rounds));
+     await User.findOneAndUpdate({
+        _id: decoded.userId,
+        role: decoded.role
+     },{
+        
+            password: hashedPassword,
+            passwordChangedAt: new Date(),
+            $inc: { passwordChangeCount: 1 },
+          
+     }
+    )
 }
 
 export const UserService = {
@@ -203,3 +240,5 @@ export const UserService = {
 
 
 }
+
+

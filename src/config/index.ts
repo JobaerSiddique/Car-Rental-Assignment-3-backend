@@ -16,6 +16,6 @@ export default{
     store_Id:process.env.storeID,
     store_pass:process.env.storePassword,
     reset_link: process.env.resetLink,
-    g_user : process.env.gUser,
-    g_pass : process.env.gPass
+    GMAIL_USER : process.env.gUser,
+    GMAIL_PASS : process.env.gPass
 }

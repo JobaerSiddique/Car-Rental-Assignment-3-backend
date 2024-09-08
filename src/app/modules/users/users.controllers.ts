@@ -114,15 +114,26 @@ const userStatusUpdate = catchAsync(async(req,res)=>{
 
 const forgetPassword = catchAsync(async(req,res)=>{
     const {email} = req.body;
-    console.log({email});
-    const result = await UserService.forgetPasswordDB(email)
+   
+    const result = await UserService.forgetPasswordDB(email);
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        success:true,
+        message:"Password reset link sent successfully",
+        data:result,
+    })
 
-}),
+})
 
 const resetPassword = catchAsync(async(req,res)=>{
-    const token = req.headers.authorization;
+    const token = req.headers.authorization?.split(' ')[1];
     const result = await UserService.resetPasswordDB(token,req.body);
-    console.log({result});
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        success:true,
+        message:"Password reset successfully",
+        data:result,
+    })
 })
 
 
@@ -140,3 +151,5 @@ export const UserController ={
    
     
 }
+
+// http://localhost:5173?email=jobaersiddique@gmail.com&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmRjNTcwYzVhMDFkMWRiY2ViMmNiOTYiLCJyb2xlIjoidXNlciIsImlhdCI6MTcyNTc4NDM2OSwiZXhwIjoxNzI1Nzg1MjY5fQ.SxwgNiwFDOJtvW8TEOgpfxAh8kFtLt9LqxMcAWBIJ0U
