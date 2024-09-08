@@ -182,6 +182,12 @@ const forgetPasswordDB = async(email:string)=>{
     sendEmail(user.email,resetLink)
 }
 
+const resetPasswordDB = async(token:string,payload:{email:string,password:string})=>{
+
+    const user = await User.findOne({email:payload.email})
+    console.log(user);
+}
+
 export const UserService = {
     createUserIntoDB,
     signInUser,
@@ -191,7 +197,8 @@ export const UserService = {
     deleteUserDB,
     userUpdateProfileDB,
     UpdateUserStatusDB,
-    forgetPasswordDB
+    forgetPasswordDB,
+    resetPasswordDB
  
 
 

@@ -117,6 +117,12 @@ const forgetPassword = catchAsync(async(req,res)=>{
     console.log({email});
     const result = await UserService.forgetPasswordDB(email)
 
+}),
+
+const resetPassword = catchAsync(async(req,res)=>{
+    const token = req.headers.authorization;
+    const result = await UserService.resetPasswordDB(token,req.body);
+    console.log({result});
 })
 
 
@@ -129,7 +135,8 @@ export const UserController ={
     deleteUser,
     userUpdateProfile,
     userStatusUpdate,
-    forgetPassword
+    forgetPassword,
+    resetPassword
    
     
 }
