@@ -56,12 +56,7 @@ const userSchema = new Schema<TUsers, UserModel>({
     timestamps:true
 })
 
-// userSchema.pre('save', async function (next){
-//     const user= this;
-//   user.password = await bcrypt.hash(user.password,Number(config.salt_Rounds) );
-//   user.confirmPassword=await bcrypt.hash(user.confirmPassword,Number(config.salt_Rounds) );
-//     next()
-// })
+
 userSchema.pre('save', async function (next) {
   const user = this;
 

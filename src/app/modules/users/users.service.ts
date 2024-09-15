@@ -91,12 +91,19 @@ const AllUserDB = async (page:number,limit:number) => {
 const UpdateUserDB = async(id:string)=>{
 
     const result = await User.findById(id);
+
    
     if(result.role === 'admin'){
         throw new AppError(httpStatus.FORBIDDEN,"Admin can't update their role")
     }
     if(!result){
         throw new AppError(httpStatus.NOT_FOUND,"User not found")
+    }
+    if(result.isDelete){
+        throw new AppError(httpStatus.FORBIDDEN,"User have no access")
+    }
+    if(result.status === 'block'){
+        throw new AppError(httpStatus.FORBIDDEN,"User already blocked")
     }
     
     result.role = 'admin'
@@ -174,7 +181,7 @@ const forgetPasswordDB = async(email:string)=>{
     const accessToken = createToken(
         jwtPayload,
         config.jwt as string,
-        "15m"
+        "10m"
     );
 
     const resetLink = `${config.reset_link}?email=${user.email}&token=${accessToken}`;
@@ -182,9 +189,9 @@ const forgetPasswordDB = async(email:string)=>{
     sendEmail(user.email,resetLink)
 }
 
-const resetPasswordDB = async(token:string,payload:{email:string,password:string})=>{
-    console.log({token});
-    const user = await User.findOne({email:payload.email})
+const resetPasswordDB = async(token:string,email:string,password:string)=>{
+  
+    const user = await User.findOne({email:email})
     if(!user){
         throw new AppError(httpStatus.NOT_FOUND,"User not found");
     }
@@ -211,7 +218,7 @@ const resetPasswordDB = async(token:string,payload:{email:string,password:string
         throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden!');
       }
       
-      const hashedPassword = await bcrypt.hash(payload.password, Number(config.salt_Rounds));
+      const hashedPassword = await bcrypt.hash(password, Number(config.salt_Rounds));
      await User.findOneAndUpdate({
         _id: decoded.userId,
         role: decoded.role

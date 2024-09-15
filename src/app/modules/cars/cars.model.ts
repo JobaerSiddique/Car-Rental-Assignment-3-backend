@@ -67,7 +67,20 @@ const CarsSchema = new Schema<TCars>({
     childSeat:{
         type:Boolean,
         default: false,
-    }
+    },
+    location: {
+        type: String,
+        required: true,
+    },
+    availabilityDates: {
+        type: [Date],
+        required: false,
+    },
+    isFeatured: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
 },{
     timestamps:true
 })

@@ -31,8 +31,8 @@ const createCars = catchAsync(async(req,res)=>{
 
 const getAllCars = catchAsync(async(req,res)=>{
     console.log(req.query)
-    const { types, minPrice, maxPrice, isElectric } = req.query;
-    const result = await CarService.getAllCarsFromDB({types, minPrice, maxPrice, isElectric});
+    const { types, minPrice, maxPrice, isElectric ,location ,startDate,endDate} = req.query;
+    const result = await CarService.getAllCarsFromDB({types, minPrice, maxPrice, isElectric,location ,startDate,endDate});
     sendResponse(res,{
         statusCode:httpStatus.OK,
         success:true,

@@ -3,6 +3,7 @@ import httpStatus from "http-status";
 import catchAsync from "../../utilis/catchAsync"
 import sendResponse from "../../utilis/sendResponse";
 import { UserService } from "./users.service";
+import AppError from '../Error/AppError';
 
 
 const createUser = catchAsync(async(req,res)=>{
@@ -127,7 +128,12 @@ const forgetPassword = catchAsync(async(req,res)=>{
 
 const resetPassword = catchAsync(async(req,res)=>{
     const token = req.headers.authorization?.split(' ')[1];
-    const result = await UserService.resetPasswordDB(token,req.body);
+    const {email,password} = req.body
+    const result = await UserService.resetPasswordDB(token,email,password);
+    console.log({token,email,password});
+    if(!token){
+        throw new AppError(httpStatus.INTERNAL_SERVER_ERROR,"Token not found");
+    }
     sendResponse(res,{
         statusCode:httpStatus.OK,
         success:true,

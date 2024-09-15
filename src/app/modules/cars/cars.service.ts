@@ -16,7 +16,8 @@ const createCarsIntoDB = async(payload:TCars)=>{
 }
 
 const getAllCarsFromDB = async(filters)=>{
-    const { types, minPrice, maxPrice, isElectric } = filters;
+  
+    const { types, minPrice, maxPrice, isElectric,location,startDate, endDate } = filters;
     const query = {};
     if (types) {
         query.types = types;  
@@ -31,7 +32,17 @@ const getAllCarsFromDB = async(filters)=>{
     if (isElectric !== undefined) {
         query.isElectric = isElectric === 'true';  
     }
-
+  
+  if (location) {
+        query.location = location;
+    }
+    if (startDate && endDate) {
+      query.$or = [
+          { availabilityDates: { $elemMatch: { $gte: new Date(startDate), $lte: new Date(endDate) } } },
+          { availabilityDates: { $size: 0 } },  // Include cars with no availability restrictions
+      ];
+  }
+    console.log();
     const result = await Cars.find(query)
     if(!result.length ){
         throw new AppError (httpStatus.NOT_FOUND,"No Data Found")
