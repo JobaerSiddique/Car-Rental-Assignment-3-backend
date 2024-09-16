@@ -4,14 +4,14 @@ import { model, Schema } from "mongoose";
 
 const reviewSchema = new Schema({
     
-   car: {
+   carId: {
         type: Schema.Types.ObjectId,
-        ref: 'car',
+        ref: 'Car',
         required: true
     },
    user: {
         type: Schema.Types.ObjectId,
-        ref: 'user',
+        ref: 'User',
         required: true
     },
    

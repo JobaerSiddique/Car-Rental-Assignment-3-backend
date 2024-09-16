@@ -10,7 +10,8 @@ import moment from 'moment';
 
 
 
-const createCarsIntoDB = async(payload:TCars)=>{
+const createCarsIntoDB = async(payload)=>{
+  console.log("payload",payload);
     const result = await Cars.create(payload)
     return result;
 }
@@ -39,13 +40,13 @@ const getAllCarsFromDB = async(filters)=>{
     if (startDate && endDate) {
       query.$or = [
           { availabilityDates: { $elemMatch: { $gte: new Date(startDate), $lte: new Date(endDate) } } },
-          { availabilityDates: { $size: 0 } },  // Include cars with no availability restrictions
+          { availabilityDates: { $size: 0 } },  
       ];
   }
-    console.log();
+
     const result = await Cars.find(query)
     if(!result.length ){
-        throw new AppError (httpStatus.NOT_FOUND,"No Data Found")
+        throw new AppError (httpStatus.NOT_FOUND,"No Data Found or min price this car not Found")
     }
     if(result.isDeleted){
       throw new AppError (httpStatus.BAD_REQUEST, "Cars already deleted")

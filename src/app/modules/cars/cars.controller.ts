@@ -7,24 +7,19 @@ import { CarService } from "./cars.service";
 
 
 const createCars = catchAsync(async(req,res)=>{
-   if(req.user.role === 'admin'){
-    const addCars = req.body
+   const addCars = req.body
     
-    console.log("createCar",req.body)
+   
     const result = await CarService.createCarsIntoDB(addCars);
+    console.log({result});
     return sendResponse(res,{
         statusCode:httpStatus.OK,
         success:true,
         message:"Car created successfully",
         data:result
     })
-   }
-   sendResponse(res,{
-    statusCode:httpStatus.UNAUTHORIZED,
-    success:false,
-    message:"You are not authorized to perform this action",
-    data:null
-   })
+   
+ 
    
 })
 
