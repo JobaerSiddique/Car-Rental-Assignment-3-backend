@@ -36,9 +36,9 @@ const createPayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
             total_amount: result.totalCost,
             currency: 'BDT',
             tran_id: trans_id, // Unique transaction ID
-            success_url: `http://localhost:5000/api/payment/paymentSuccess/${trans_id}`,
-            fail_url: `http://localhost:5000/api/payment/paymentFailed/${trans_id}`,
-            cancel_url: `http://localhost:5000/api/payment/paymentCancel/${trans_id}`,
+            success_url: `https://car-rental-assignment-3-backend.vercel.app/api/payment/paymentSuccess/${trans_id}`,
+            fail_url: `https://car-rental-assignment-3-backend.vercel.app/api/payment/paymentFailed/${trans_id}`,
+            cancel_url: `https://car-rental-assignment-3-backend.vercel.app/api/payment/paymentCancel/${trans_id}`,
             ipn_url: 'http://localhost:3030/ipn',
             shipping_method: 'Courier',
             product_name: result.car.name,
@@ -65,7 +65,6 @@ const createPayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         const sslcz = new sslcommerz_lts_1.default(store_id, store_passwd, is_live);
         const apiResponse = yield sslcz.init(data);
         if (apiResponse && apiResponse.GatewayPageURL) {
-            // Save the payment details in the database
             const payment = new payment_model_1.Payment({
                 bookingId: result._id,
                 totalCost: result.totalCost,
@@ -81,11 +80,8 @@ const createPayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
                 console.error("Error saving payment:", saveError);
                 throw new Error('Failed to save payment to the database');
             }
-            // Commit the transaction
             yield session.commitTransaction();
             session.endSession();
-            // console.log(data);
-            // Redirect to the SSLCommerz payment gateway
             res.send({ url: apiResponse.GatewayPageURL });
             console.log(apiResponse.GatewayPageURL);
         }

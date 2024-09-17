@@ -35,8 +35,8 @@ console.log(date,drivingLicense);
         car: carId,
         date:date,
         startTime: startTime,
-        endTime: null, // End time is null initially
-        totalCost: 0 ,// Total cost is 0 initially
+        endTime: null, 
+        totalCost: 0 ,
         nid: nid,
         passport: passport,
         drivingLicense: drivingLicense
@@ -127,23 +127,21 @@ const getSingleBookingDB = async(id:string)=>{
 }
 
 const getBookingSummaryDB = async () => {
-    // Calculate total bookings
+   
     const totalBookings = await Bookings.countDocuments();
   
-    // Calculate available cars
     const availableCars = await Cars.countDocuments({ status: 'available' });
   
-    // Calculate total revenue from paid bookings
     const totalRevenue = await Bookings.aggregate([
       {
         $match: {
-          paid: 'paid', // Filter bookings where the payment status is 'paid'
+          paid: 'paid',
         },
       },
       {
         $group: {
           _id: null,
-          totalRevenue: { $sum: "$totalCost" }, // Sum the totalCost for paid bookings
+          totalRevenue: { $sum: "$totalCost" }, 
         },
       },
     ]);

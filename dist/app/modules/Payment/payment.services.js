@@ -36,14 +36,13 @@ const paymentSuccessDB = (id) => __awaiter(void 0, void 0, void 0, function* () 
         payment.date = new Date().toLocaleDateString();
         payment.status = 'Complete';
         yield payment.save({ session });
-        const booking = yield booking_model_1.Bookings.findById(payment.bookingId).session(session).populate('car') // Populate car details
+        const booking = yield booking_model_1.Bookings.findById(payment.bookingId).session(session).populate('car')
             .populate('user');
         if (!booking) {
             throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Booking not found');
         }
         booking.paid = 'paid';
         yield booking.save({ session });
-        // Commit the transaction
         yield session.commitTransaction();
         session.endSession();
         return { payment, booking };
@@ -58,34 +57,26 @@ const paymentCancelDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const session = yield mongoose_1.default.startSession();
     session.startTransaction();
     try {
-        // Find the payment by transaction ID
         const payment = yield payment_model_1.Payment.findOne({ transId: id }).session(session);
         if (!payment) {
             throw new AppError_1.default(http_status_1.default.INTERNAL_SERVER_ERROR, "Payment not found");
         }
-        // Update the payment status to 'Failed'
         payment.status = 'Cancel';
         yield payment.save({ session });
-        // Find the booking associated with the payment
         const booking = yield booking_model_1.Bookings.findById(payment.bookingId)
             .session(session)
-            .populate('car') // Assuming 'car' is a reference to another collection
-            .populate('user'); // Assuming 'user' is a reference to another collection
-        // Execute the query to populate the fields
+            .populate('car')
+            .populate('user');
         if (!booking) {
             throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Booking not found");
         }
-        // No need to update the booking's payment status since it's failed
-        // Commit the transaction
         yield session.commitTransaction();
     }
     catch (error) {
-        // Abort the transaction in case of an error
         yield session.abortTransaction();
         throw new AppError_1.default(http_status_1.default.BAD_GATEWAY, "Transaction not successful");
     }
     finally {
-        // End the session
         session.endSession();
     }
 });
@@ -93,7 +84,6 @@ const paymentFailedDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const session = yield mongoose_1.default.startSession();
     session.startTransaction();
     try {
-        // Find the payment by transaction ID
         const payment = yield payment_model_1.Payment.findOne({ transId: id }).session(session);
         if (!payment) {
             throw new AppError_1.default(http_status_1.default.INTERNAL_SERVER_ERROR, "Payment not found");
