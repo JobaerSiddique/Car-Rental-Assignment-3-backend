@@ -8,18 +8,15 @@ const app:Application = express()
 
 
 app.use(express.json())
-app.use((req, res, next) => {
-  console.log('CORS Headers:', res.get('Access-Control-Allow-Origin'));
-  next();
-});
-// const allowedOrigins = ['http://localhost:5173'];
+
+const allowedOrigins = ['http://localhost:5173'];
 
 
 app.use(cors({
-  origin: '*',
+  origin: allowedOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+  credentials: true // Enable credentials
 }));
 
 // app.options('*', cors({
@@ -32,7 +29,10 @@ app.use(cors({
 //   },
 //   credentials: true 
 // }));
-
+app.use((req, res, next) => {
+  console.log('CORS Headers:', res.get('Access-Control-Allow-Origin'));
+  next();
+});
 app.use(cookieParser())
 
 app.use('/api', router)
