@@ -12,7 +12,9 @@ app.use((req, res, next) => {
   console.log('CORS Headers:', res.get('Access-Control-Allow-Origin'));
   next();
 });
-const allowedOrigins = ['http://localhost:5173', 'https://your-production-frontend-url.com'];
+const allowedOrigins = ['http://localhost:5173'];
+
+
 app.use(cors({
   origin: (origin, callback) => {
     if (allowedOrigins.includes(origin) || !origin) {
