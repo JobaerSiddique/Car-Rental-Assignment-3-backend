@@ -8,11 +8,18 @@ const app:Application = express()
 
 
 app.use(express.json())
+const allowedOrigins = ['http://localhost:5173', 'https://your-production-frontend-url.com'];
 app.use(cors({
-  origin: 'http://localhost:5173', // your frontend URL
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true 
+  credentials: true
 }));
 app.use(cookieParser())
 
