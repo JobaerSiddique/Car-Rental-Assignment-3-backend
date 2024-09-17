@@ -102,6 +102,21 @@ const createPayment = catchAsync(async(req,res)=>{
     
 })
 
+const userPaymentHistory = catchAsync(async(req,res)=>{
+    
+   const userId = req.user.userId
+   
+     const result = await PaymentService.userPaymentHistoryDB(userId)
+     sendResponse(res,{
+        statusCode:httpStatus.OK,
+        success:true,
+        message:"Payment History retrieved successfully",
+        data:result,
+     })
+ })
+
+
+
 const paymentSuccess = catchAsync(async(req,res)=>{
     const {trans_id} = req.params;
    const result = await PaymentService.paymentSuccessDB(trans_id);
@@ -136,11 +151,14 @@ const getPaymentInfo = catchAsync(async(req,res)=>{
     })
 })
 
+
+
 export const PaymentController ={
     createPayment,
     paymentSuccess,
     paymentCancel,
     paymentFailed,
-    getPaymentInfo
+    getPaymentInfo,
+    userPaymentHistory
    
 }

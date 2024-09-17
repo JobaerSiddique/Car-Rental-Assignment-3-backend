@@ -5,6 +5,7 @@ import AppError from "../Error/AppError";
 import { Bookings } from "./booking.model";
 import { Cars } from "../cars/cars.model";
 import mongoose from "mongoose";
+import moment from "moment";
 
 
 const createBookingIntoDB =async (userId:string,carId:string,startTime:string,nid:string,passport:string,drivingLicense:string,date:string) =>{
@@ -163,7 +164,76 @@ const getBookingSummaryDB = async () => {
    
     return result
 }
-  
+  const generateReportDB = async(payload:any)=>{
+    console.log(payload);
+    
+    let reportCondition = {}
+
+    switch (payload) {
+      case 'Daily':
+        reportCondition = {
+          createdAt: {
+            $gte: moment().startOf('day').toDate(),
+            $lte: moment().endOf('day').toDate(),
+          },
+        };
+        break;
+      case 'Weekly':
+        reportCondition = {
+          createdAt: {
+            $gte: moment().startOf('week').toDate(),
+            $lte: moment().endOf('week').toDate(),
+          },
+        };
+        break;
+      case 'Monthly':
+        reportCondition = {
+          createdAt: {
+            $gte: moment().startOf('month').toDate(),
+            $lte: moment().endOf('month').toDate(),
+          },
+        };
+        break;
+      case 'Yearly':
+        reportCondition = {
+          createdAt: {
+            $gte: moment().startOf('year').toDate(),
+            $lte: moment().endOf('year').toDate(),
+          },
+        };
+        break;
+      default:
+        break;
+    }
+
+    const bookingCount = await Bookings.countDocuments(reportCondition)
+    
+    const availableCars = await Cars.countDocuments({status:"available"})
+
+    const totalRevenue = await Bookings.aggregate([
+      {
+        $match: {
+          ...reportCondition,
+          paid: 'paid', 
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: "$totalCost" }, 
+        },
+      },
+    ]);
+     
+    return{
+      bookingCount,
+      availableCars,
+      totalRevenue: totalRevenue[0]?.totalRevenue || 0
+
+    }
+    
+
+  }
 export const BookingService = {
     createBookingIntoDB,
     UserBookingInfoFromDB,
@@ -172,7 +242,8 @@ export const BookingService = {
     deleteBookingsDB,
     getSingleBookingDB,
     getBookingSummaryDB,
-    updateBookingInfoDB
+    updateBookingInfoDB,
+    generateReportDB
   
     
 }

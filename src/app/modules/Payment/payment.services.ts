@@ -159,12 +159,38 @@ const getPaymentInfoDB = async(id:string)=>{
   return result;
 }
 
+const userPaymentHistoryDB = async (userId:string) => {
+  try {
+    
+    const bookings = await Bookings.find({ user: userId }).select('_id');
+    const bookingIds = bookings.map(booking => booking._id);
+
+    if (bookingIds.length === 0) {
+      throw new AppError(httpStatus.NOT_FOUND,"No booking found")
+    }
+
+    // Find all payments associated with the booking IDs
+    const payments = await Payment.find({ bookingId: { $in: bookingIds } }).populate({
+      path: 'bookingId',
+      populate: [
+        { path: 'user', model: "User" },
+        { path: 'car', model: "Car" }
+      ]
+    }).exec();
+    
+    return payments;
+  } catch (error) {
+    
+    throw new Error('Unable to fetch payment history');
+  }
+};
 
 export const  PaymentService = {
     createPaymentIntoDB,
     paymentSuccessDB,
     paymentCancelDB,
     paymentFailedDB,
-    getPaymentInfoDB
+    getPaymentInfoDB,
+    userPaymentHistoryDB
  
 }

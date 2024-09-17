@@ -75,6 +75,18 @@ const getSingleBooking = catchAsync(async(req,res)=>{
     })
 })
 
+const reportGenerate = catchAsync(async(req,res)=>{
+    const {report}= req.query;
+    console.log(report);
+    const result = await BookingService.generateReportDB(report)
+    sendResponse(res,{
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Booking report generated successfully",
+        data: result,
+    })
+})
+
 
 const deleteBookings = catchAsync(async(req,res)=>{
     const {id} = req.params
@@ -109,6 +121,9 @@ const bookingUpdate = catchAsync(async(req,res)=>{
         data: result,
     })
 })
+
+
+
 export const BookingController ={
     createBooking,
     userBooking,
@@ -117,7 +132,9 @@ export const BookingController ={
     deleteBookings,
     getSingleBooking,
     totalSummery,
-    bookingUpdate
+    bookingUpdate,
+    reportGenerate
+   
     
   
    
