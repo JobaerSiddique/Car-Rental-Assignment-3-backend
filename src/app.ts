@@ -29,12 +29,7 @@ app.use(cors({
   credentials: true // Allow cookies to be sent
 }));
 
-app.options('*', cors({
-  origin: 'http://localhost:5173',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-}));
+
 
 
 
