@@ -13,6 +13,16 @@ const CarsSchema = new mongoose_1.Schema({
         required: true,
         trim: true,
     },
+    model: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    year: {
+        type: String,
+        required: true,
+        trim: true,
+    },
     color: {
         type: String,
         required: true,
@@ -20,10 +30,18 @@ const CarsSchema = new mongoose_1.Schema({
     },
     isElectric: {
         type: Boolean,
-        required: true,
+        required: false,
     },
     features: {
         type: [String],
+        required: true,
+    },
+    types: {
+        type: String,
+        required: true,
+    },
+    image: {
+        type: String,
         required: true,
     },
     status: {
@@ -40,7 +58,28 @@ const CarsSchema = new mongoose_1.Schema({
         type: Boolean,
         required: true,
         default: false,
-    }
+    },
+    gps: {
+        type: Boolean,
+        default: false,
+    },
+    childSeat: {
+        type: Boolean,
+        default: false,
+    },
+    location: {
+        type: String,
+        required: true,
+    },
+    availabilityDates: {
+        type: [Date],
+        required: false,
+    },
+    isFeatured: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
 }, {
     timestamps: true
 });

@@ -27,7 +27,8 @@ const bookingValidationSchema = zod_1.z.object({
             return end > start;
         }
         return true;
-    })
+    }),
+    approve: zod_1.z.boolean().default(false)
 });
 const updateBookingValidations = zod_1.z.object({
     body: zod_1.z.object({

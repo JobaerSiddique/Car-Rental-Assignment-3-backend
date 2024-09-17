@@ -35,6 +35,7 @@ const Auth = (...requiredRoles) => {
                 return res.status(http_status_1.default.UNAUTHORIZED).json({ success: false, message: 'You have no access to this route ' });
             }
             req.user = decoded;
+            console.log('auth', req.user);
             next();
         });
     }));

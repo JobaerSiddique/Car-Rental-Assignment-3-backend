@@ -18,27 +18,20 @@ const catchAsync_1 = __importDefault(require("../../utilis/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utilis/sendResponse"));
 const cars_service_1 = require("./cars.service");
 const createCars = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (req.user.role === 'admin') {
-        const addCars = req.body;
-        console.log("createCar", req.body);
-        const result = yield cars_service_1.CarService.createCarsIntoDB(addCars);
-        return (0, sendResponse_1.default)(res, {
-            statusCode: http_status_1.default.OK,
-            success: true,
-            message: "Car created successfully",
-            data: result
-        });
-    }
-    (0, sendResponse_1.default)(res, {
-        statusCode: http_status_1.default.UNAUTHORIZED,
-        success: false,
-        message: "You are not authorized to perform this action",
-        data: null
+    const addCars = req.body;
+    const result = yield cars_service_1.CarService.createCarsIntoDB(addCars);
+    console.log({ result });
+    return (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Car created successfully",
+        data: result
     });
 }));
 const getAllCars = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("test", req.user);
-    const result = yield cars_service_1.CarService.getAllCarsFromDB();
+    console.log(req.query);
+    const { types, minPrice, maxPrice, isElectric, location, startDate, endDate } = req.query;
+    const result = yield cars_service_1.CarService.getAllCarsFromDB({ types, minPrice, maxPrice, isElectric, location, startDate, endDate });
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -68,9 +61,9 @@ const updateCar = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void
     });
 }));
 const returnCar = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { bookingId, endTime } = req.body;
-    console.log(req.body);
-    const result = yield cars_service_1.CarService.returnCarfromDB(bookingId, endTime);
+    const { bookingId, endTime, endDate } = req.body;
+    console.log(bookingId, endDate, endTime);
+    const result = yield cars_service_1.CarService.returnCarfromDB(bookingId, endDate, endTime);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -94,5 +87,5 @@ exports.CarController = {
     getSingleCar,
     updateCar,
     deleteCar,
-    returnCar
+    returnCar,
 };
