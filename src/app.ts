@@ -17,6 +17,17 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true, 
 }));
+
+
+app.options('*', cors({
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+}));
+
+
+
 app.use((req, res, next) => {
   console.log('Origin:', req.headers.origin);
   console.log('CORS Headers:', res.get('Access-Control-Allow-Origin'));
