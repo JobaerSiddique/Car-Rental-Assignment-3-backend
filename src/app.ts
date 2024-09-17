@@ -33,11 +33,7 @@ app.use(cors({
 
 
 
-app.use((req, res, next) => {
-  console.log('Origin:', req.headers.origin);
-  console.log('CORS Headers:', res.get('Access-Control-Allow-Origin'));
-  next();
-});
+
 app.use(cookieParser())
 
 app.use('/api', router)
