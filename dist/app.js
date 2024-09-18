@@ -12,7 +12,7 @@ const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 // Define allowed origins
-const allowedOrigins = ['http://localhost:5173']; // Add other origins as needed
+const allowedOrigins = ['http://localhost:5173', 'https://66eb2f3a7ae6548f66cde6de--dapper-nasturtium-bce1b7.netlify.app'];
 // Configure CORS
 app.use((0, cors_1.default)({
     origin: allowedOrigins,
