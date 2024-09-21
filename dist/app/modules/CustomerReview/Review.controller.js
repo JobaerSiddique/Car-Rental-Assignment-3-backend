@@ -19,6 +19,7 @@ const sendResponse_1 = __importDefault(require("../../utilis/sendResponse"));
 const Review_service_1 = require("./Review.service");
 const createReview = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const review = req.body;
+    console.log(review);
     const result = yield Review_service_1.ReviewService.createReviewDB(review);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,

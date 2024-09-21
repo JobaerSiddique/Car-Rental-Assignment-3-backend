@@ -95,6 +95,7 @@ const generateEmailTemplate = (resetLink) => {
   `;
 };
 const sendEmail = (to, html) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log({ html });
     const transporter = nodemailer_1.default.createTransport({
         host: "smtp.gmail.com.",
         port: 587,
@@ -106,11 +107,11 @@ const sendEmail = (to, html) => __awaiter(void 0, void 0, void 0, function* () {
     });
     const htmls = generateEmailTemplate(html);
     yield transporter.sendMail({
-        from: config_1.default.GMAIL_USER, // sender address
-        to, // list of receivers
-        subject: "Reset Your Password ", // Subject line
+        from: config_1.default.GMAIL_USER,
+        to,
+        subject: "Reset Your Password ",
         text: "Reset your password after 10 Mins otherwise this link can not be worked", // plain text body
-        html: htmls, // html body
+        html: htmls,
     });
 });
 exports.sendEmail = sendEmail;

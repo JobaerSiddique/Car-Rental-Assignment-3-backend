@@ -108,17 +108,17 @@ const userPaymentHistory = (0, catchAsync_1.default)((req, res) => __awaiter(voi
 const paymentSuccess = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { trans_id } = req.params;
     const result = yield payment_services_1.PaymentService.paymentSuccessDB(trans_id);
-    res.redirect(`http://localhost:5173/dashboard/payment/success/${trans_id}`);
+    res.redirect(`https://dapper-nasturtium-bce1b7.netlify.app/dashboard/payment/success/${trans_id}`);
 }));
 const paymentCancel = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { trans_id } = req.params;
     const result = yield payment_services_1.PaymentService.paymentCancelDB(trans_id);
-    res.redirect(`http://localhost:5173/dashboard/payment/cancel/${trans_id}`);
+    res.redirect(`https://dapper-nasturtium-bce1b7.netlify.app/dashboard/payment/cancel/${trans_id}`);
 }));
 const paymentFailed = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { trans_id } = req.params;
     const result = yield payment_services_1.PaymentService.paymentFailedDB(trans_id);
-    res.redirect(`http://localhost:5173/dashboard/payment/failed/${trans_id}`);
+    res.redirect(`https://dapper-nasturtium-bce1b7.netlify.app/dashboard/payment/failed/${trans_id}`);
 }));
 const getPaymentInfo = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { trans_id } = req.params;
