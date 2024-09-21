@@ -148,7 +148,7 @@ const forgetPasswordDB = (email) => __awaiter(void 0, void 0, void 0, function* 
         role: user === null || user === void 0 ? void 0 : user.role
     };
     const accessToken = (0, users_utils_1.createToken)(jwtPayload, config_1.default.jwt, "10m");
-    const resetLink = `${config_1.default.Reset_Link}?email=${user.email}&token=${accessToken}`;
+    const resetLink = `https://dapper-nasturtium-bce1b7.netlify.app/reset-Password?email=${user.email}&token=${accessToken}`;
     console.log({ resetLink });
     (0, sendEmail_1.sendEmail)(user.email, resetLink);
 });

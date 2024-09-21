@@ -12,7 +12,7 @@ app.use(express.json())
 
 
 // Define allowed origins
-const allowedOrigins = ['http://localhost:5173','https://car-rentals-client-assign-5.vercel.app','https://dapper-nasturtium-bce1b7.netlify.app']; 
+const allowedOrigins = ['http://localhost:5173','https://dapper-nasturtium-bce1b7.netlify.app']; 
 
 // Configure CORS
 app.use(cors({

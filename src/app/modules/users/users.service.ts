@@ -186,7 +186,7 @@ const forgetPasswordDB = async(email:string)=>{
    
    
 
-    const resetLink = `${config.Reset_Link}?email=${user.email}&token=${accessToken}`;
+    const resetLink = `https://dapper-nasturtium-bce1b7.netlify.app/reset-Password?email=${user.email}&token=${accessToken}`;
    console.log({resetLink})
     sendEmail(user.email,resetLink)
 }
