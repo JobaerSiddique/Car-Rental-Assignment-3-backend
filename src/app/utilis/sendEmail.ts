@@ -1,7 +1,7 @@
 
 import nodemailer from "nodemailer"
 import config from "../../config";
-const generateEmailTemplate = (resetLink:string) => {
+const generateEmailTemplate = (resetLink:any) => {
   return `
     <!DOCTYPE html>
     <html lang="en">
