@@ -85,7 +85,7 @@ const generateEmailTemplate = (resetLink) => {
 
 
 export const sendEmail=async(to:string,html:string)=>{
-  
+  console.log({html})
   
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com.",
@@ -99,10 +99,10 @@ export const sendEmail=async(to:string,html:string)=>{
     });
     const htmls = generateEmailTemplate(html)
      await transporter.sendMail({
-      from: config.GMAIL_USER, // sender address
-      to, // list of receivers
-      subject: "Reset Your Password ", // Subject line
+      from: config.GMAIL_USER,
+      to, 
+      subject: "Reset Your Password ", 
       text: "Reset your password after 10 Mins otherwise this link can not be worked", // plain text body
-      html:htmls, // html body
+      html:htmls, 
     });
   }
