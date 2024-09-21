@@ -151,6 +151,7 @@ const forgetPasswordDB = (email) => __awaiter(void 0, void 0, void 0, function* 
     const resetLink = `https://dapper-nasturtium-bce1b7.netlify.app/reset-Password?email=${user.email}&token=${accessToken}`;
     console.log({ resetLink });
     (0, sendEmail_1.sendEmail)(user.email, resetLink);
+    return resetLink;
 });
 const resetPasswordDB = (token, email, password) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield users_model_1.User.findOne({ email: email });

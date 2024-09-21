@@ -130,6 +130,7 @@ const resetPassword = catchAsync(async(req,res)=>{
     const token = req.headers.authorization?.split(' ')[1];
     const {email,password} = req.body
     const result = await UserService.resetPasswordDB(token,email,password);
+    console.log(result);
     console.log({token,email,password});
     if(!token){
         throw new AppError(httpStatus.INTERNAL_SERVER_ERROR,"Token not found");
