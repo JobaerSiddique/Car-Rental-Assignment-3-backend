@@ -18,6 +18,6 @@ export default{
     reset_link: process.env.resetLink,
     GMAIL_USER : process.env.gUser,
     GMAIL_PASS : process.env.gPass,
-    Netlify_Link : process.env.RESET_LINK_NETLIFY,
-    Vercel_Link : process.env.RESET_LINK_VERCEL
+    Netlify_Link : process.env.RESET_LINK_NETLIFY
+   
 }
