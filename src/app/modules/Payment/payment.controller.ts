@@ -119,7 +119,7 @@ const paymentSuccess = catchAsync(async(req,res)=>{
     const {trans_id} = req.params;
    const result = await PaymentService.paymentSuccessDB(trans_id);
   
-res.redirect(`http://localhost:5173/dashboard/payment/success/${trans_id}`)
+res.redirect(`https://dapper-nasturtium-bce1b7.netlify.app/dashboard/payment/success/${trans_id}`)
 
 })
 
@@ -127,14 +127,14 @@ res.redirect(`http://localhost:5173/dashboard/payment/success/${trans_id}`)
 const paymentCancel = catchAsync(async(req,res)=>{
     const {trans_id} = req.params;
     const result = await PaymentService.paymentCancelDB(trans_id);
-    res.redirect(`http://localhost:5173/dashboard/payment/cancel/${trans_id}`)
+    res.redirect(`https://dapper-nasturtium-bce1b7.netlify.app/dashboard/payment/cancel/${trans_id}`)
 })
 
 const paymentFailed = catchAsync(async(req,res)=>{
     const {trans_id} = req.params;
    const result = await PaymentService.paymentFailedDB(trans_id);
 
-res.redirect(`http://localhost:5173/dashboard/payment/failed/${trans_id}`)
+res.redirect(`https://dapper-nasturtium-bce1b7.netlify.app/dashboard/payment/failed/${trans_id}`)
   
 })
 

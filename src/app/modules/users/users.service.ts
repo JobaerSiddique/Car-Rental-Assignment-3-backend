@@ -183,9 +183,11 @@ const forgetPasswordDB = async(email:string)=>{
         config.jwt as string,
         "10m"
     );
-
-    const resetLink = `${config.reset_link}?email=${user.email}&token=${accessToken}`;
-    console.log(resetLink);
+   
+   
+  const  resetLink = `${config.Netlify_Link}?email=${user.email}&token=${accessToken}`
+    // const resetLink = `${config.reset_link}?email=${user.email}&token=${accessToken}`;
+   
     sendEmail(user.email,resetLink)
 }
 
